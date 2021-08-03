@@ -35,7 +35,7 @@ app.use("/auth", authRoutes);
 app.use("/device", deviceRoutes);
 app.use("/section", sectionRoutes);
 
-app.listen(8080, () => {
+app.listen(8085, () => {
   console.log("http server started on port 8080");
 });
 
