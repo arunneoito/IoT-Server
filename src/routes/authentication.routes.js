@@ -16,7 +16,7 @@ router.post("/forgot-password", forgotPasswordSchema, forgotPassword);
 router.post(
   "/validate-reset-token",
   validateResetTokenSchema,
-  validateResetTokenz
+  validateResetToken
 );
 router.post("/reset-password", resetPasswordSchema, resetPassword);
 router.get("/:id", authorize(), getById);
