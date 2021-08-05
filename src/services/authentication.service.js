@@ -1,4 +1,7 @@
-﻿const config = require("../../config.json");
+﻿/* eslint-disable no-param-reassign */
+/* eslint-disable consistent-return */
+/* eslint-disable no-shadow */
+/* eslint-disable no-use-before-define */
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -6,32 +9,16 @@ const sendEmail = require("../../utils/send-email");
 const Role = require("../../utils/roles");
 const Account = require("../models/account.model");
 const RefreshToken = require("../models/refreshToken.model");
-
-module.exports = {
-  authenticate,
-  refreshToken,
-  revokeToken,
-  register,
-  verifyEmail,
-  forgotPassword,
-  validateResetToken,
-  resetPassword,
-  getAll,
-  getById,
-  create,
-  update,
-  delete: _delete
-};
+const config = require("../../config.json");
 
 async function authenticate({ email, password, ipAddress }) {
   const account = await Account.findOne({ email });
 
-  if (
-    !account ||
-    !account.isVerified ||
-    !bcrypt.compareSync(password, account.passwordHash)
-  ) {
-    throw "Email or password is incorrect";
+  if (!account || !bcrypt.compareSync(password, account.passwordHash)) {
+    throw new Error("Email or password is incorrect");
+  }
+  if (!account.isVerified) {
+    throw new Error("Please verify your email address");
   }
 
   // authentication successful so generate jwt and refresh tokens
@@ -83,9 +70,9 @@ async function revokeToken({ token, ipAddress }) {
 
 async function register(params, origin) {
   // validate
-  console.log(params);
   if (await Account.findOne({ email: params.email })) {
     // send already registered error in email to prevent account enumeration
+    // eslint-disable-next-line no-return-await
     return await sendAlreadyRegisteredEmail(params.email, origin);
   }
 
@@ -100,7 +87,7 @@ async function register(params, origin) {
   // hash password
   account.passwordHash = hash(params.password);
   account.keys = {
-    secretKey: hash(params.password + " " + params.email),
+    secretKey: hash(`${params.password} ${params.email}`),
     createdAt: new Date()
   };
 
@@ -114,7 +101,7 @@ async function register(params, origin) {
 async function verifyEmail({ token }) {
   const account = await Account.findOne({ verificationToken: token });
 
-  if (!account) throw "Verification failed";
+  if (!account) throw new Error("Verification failed");
 
   account.verified = Date.now();
   account.verificationToken = undefined;
@@ -144,7 +131,7 @@ async function validateResetToken({ token }) {
     "resetToken.expires": { $gt: Date.now() }
   });
 
-  if (!account) throw "Invalid token";
+  if (!account) throw new Error("Invalid token");
 }
 
 async function resetPassword({ token, password }) {
@@ -153,7 +140,7 @@ async function resetPassword({ token, password }) {
     "resetToken.expires": { $gt: Date.now() }
   });
 
-  if (!account) throw "Invalid token";
+  if (!account) throw new Error("Invalid token");
 
   // update password and remove reset token
   account.passwordHash = hash(password);
@@ -175,7 +162,7 @@ async function getById(id) {
 async function create(params) {
   // validate
   if (await Account.findOne({ email: params.email })) {
-    throw 'Email "' + params.email + '" is already registered';
+    throw new Error(`Email "${params.email}" is already registered`);
   }
 
   const account = new Account(params);
@@ -200,7 +187,7 @@ async function update(id, params) {
     account.email !== params.email &&
     (await Account.findOne({ email: params.email }))
   ) {
-    throw 'Email "' + params.email + '" is already taken';
+    throw new Error(`Email "${params.email}" is already taken`);
   }
 
   // hash password if it was entered
@@ -216,6 +203,7 @@ async function update(id, params) {
   return basicDetails(account);
 }
 
+// eslint-disable-next-line no-underscore-dangle
 async function _delete(id) {
   const account = await getAccount(id);
   await account.remove();
@@ -224,9 +212,8 @@ async function _delete(id) {
 // helper functions
 
 async function getAccount(id) {
-  if (!isValidId(id)) throw "Account not found";
   const account = await Account.findById(id);
-  if (!account) throw "Account not found";
+  if (!account) throw new Error("Account not found");
   return account;
 }
 
@@ -234,7 +221,7 @@ async function getRefreshToken(token) {
   const refreshToken = await RefreshToken.findOne({ token }).populate(
     "account"
   );
-  if (!refreshToken || !refreshToken.isActive) throw "Invalid token";
+  if (!refreshToken || !refreshToken.isActive) throw new Error("Invalid token");
   return refreshToken;
 }
 
@@ -313,7 +300,8 @@ async function sendAlreadyRegisteredEmail(email, origin) {
   if (origin) {
     message = `<p>If you don't know your password please visit the <a href="${origin}/account/forgot-password">forgot password</a> page.</p>`;
   } else {
-    message = `<p>If you don't know your password you can reset it via the <code>/account/forgot-password</code> api route.</p>`;
+    message =
+      "<p>If you don't know your password you can reset it via the <code>/account/forgot-password</code> api route.</p>";
   }
 
   await sendEmail({
@@ -343,3 +331,19 @@ async function sendPasswordResetEmail(account, origin) {
                ${message}`
   });
 }
+
+module.exports = {
+  authenticate,
+  refreshToken,
+  revokeToken,
+  register,
+  verifyEmail,
+  forgotPassword,
+  validateResetToken,
+  resetPassword,
+  getAll,
+  getById,
+  create,
+  update,
+  delete: _delete
+};

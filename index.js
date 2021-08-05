@@ -28,15 +28,16 @@ aedes.authenticate = mqttAuth.mqttAuth;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
-// app.use(errorHandler);
 
 /* adding routes to express application */
 app.use("/auth", authRoutes);
 app.use("/device", deviceRoutes);
 app.use("/section", sectionRoutes);
 
+app.use(errorHandler);
+
 app.listen(8085, () => {
-  console.log("http server started on port 8080");
+  console.log("http server started on port 8085");
 });
 
 server.listen(port, () => {

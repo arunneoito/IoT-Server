@@ -42,10 +42,9 @@ function authenticate(req, res, next) {
       setTokenCookie(res, refreshToken);
       res.json(account);
     })
-    .catch(() => {
-      res
-        .status(403)
-        .send({ message: "Email or password is incorrect", error: true });
+    .catch((e) => {
+      console.log(e);
+      res.status(403).send({ message: e, error: true });
     });
 }
 
