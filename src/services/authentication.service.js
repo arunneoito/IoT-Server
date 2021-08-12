@@ -32,11 +32,11 @@ async function authenticate({ email, password, ipAddress }) {
   return {
     ...basicDetails(account),
     jwtToken,
-    refreshToken: refreshToken.token
+    refreshToken: refreshToken.token,
   };
 }
 
-async function refreshToken({ token, ipAddress }) {
+async function refrcshToken({ token, ipAddress }) {
   const refreshToken = await getRefreshToken(token);
   const { account } = refreshToken;
 
@@ -55,7 +55,7 @@ async function refreshToken({ token, ipAddress }) {
   return {
     ...basicDetails(account),
     jwtToken,
-    refreshToken: newRefreshToken.token
+    refreshToken: newRefreshToken.token,
   };
 }
 
@@ -88,7 +88,7 @@ async function register(params, origin) {
   account.passwordHash = hash(params.password);
   account.keys = {
     secretKey: hash(`${params.password} ${params.email}`),
-    createdAt: new Date()
+    createdAt: new Date(),
   };
 
   // save account
@@ -117,7 +117,7 @@ async function forgotPassword({ email }, origin) {
   // create reset token that expires after 24 hours
   account.resetToken = {
     token: randomTokenString(),
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
   };
   await account.save();
 
@@ -128,7 +128,7 @@ async function forgotPassword({ email }, origin) {
 async function validateResetToken({ token }) {
   const account = await Account.findOne({
     "resetToken.token": token,
-    "resetToken.expires": { $gt: Date.now() }
+    "resetToken.expires": { $gt: Date.now() },
   });
 
   if (!account) throw new Error("Invalid token");
@@ -137,7 +137,7 @@ async function validateResetToken({ token }) {
 async function resetPassword({ token, password }) {
   const account = await Account.findOne({
     "resetToken.token": token,
-    "resetToken.expires": { $gt: Date.now() }
+    "resetToken.expires": { $gt: Date.now() },
   });
 
   if (!account) throw new Error("Invalid token");
@@ -232,7 +232,7 @@ function hash(password) {
 function generateJwtToken(account) {
   // create a jwt token containing the account id that expires in 15 minutes
   return jwt.sign({ sub: account.id, id: account.id }, config.secret, {
-    expiresIn: "15m"
+    expiresIn: "15m",
   });
 }
 
@@ -242,7 +242,7 @@ function generateRefreshToken(account, ipAddress) {
     account: account.id,
     token: randomTokenString(),
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    createdByIp: ipAddress
+    createdByIp: ipAddress,
   });
 }
 
@@ -260,7 +260,7 @@ function basicDetails(account) {
     role,
     created,
     updated,
-    isVerified
+    isVerified,
   } = account;
   return {
     id,
@@ -271,7 +271,7 @@ function basicDetails(account) {
     role,
     created,
     updated,
-    isVerified
+    isVerified,
   };
 }
 
@@ -291,7 +291,7 @@ async function sendVerificationEmail(account, origin) {
     subject: "Sign-up Verification API - Verify Email",
     html: `<h4>Verify Email</h4>
                <p>Thanks for registering!</p>
-               ${message}`
+               ${message}`,
   });
 }
 
@@ -309,7 +309,7 @@ async function sendAlreadyRegisteredEmail(email, origin) {
     subject: "Sign-up Verification API - Email Already Registered",
     html: `<h4>Email Already Registered</h4>
                <p>Your email <strong>${email}</strong> is already registered.</p>
-               ${message}`
+               ${message}`,
   });
 }
 
@@ -328,13 +328,12 @@ async function sendPasswordResetEmail(account, origin) {
     to: account.email,
     subject: "Sign-up Verification API - Reset Password",
     html: `<h4>Reset Password Email</h4>
-               ${message}`
+               ${message}`,
   });
 }
 
 module.exports = {
   authenticate,
-  refreshToken,
   revokeToken,
   register,
   verifyEmail,
@@ -345,5 +344,5 @@ module.exports = {
   getById,
   create,
   update,
-  delete: _delete
+  delete: _delete,
 };
