@@ -56,7 +56,7 @@ function authenticate(req, res, next) {
 }
 
 function refreshToken(req, res, next) {
-  const token = req.cookies.refreshToken;
+  const token = req.body.refreshToken;
   const ipAddress = req.ip;
   accountService
     .refreshToken({ token, ipAddress })
@@ -93,10 +93,10 @@ function revokeToken(req, res, next) {
 }
 
 function refreshSchema(req, res, next) {
-  if (req.cookies) {
-    next();
-  }
-  res.status(401).json({ message: "Unauthorized" });
+  const schema = Joi.object({
+    refreshToken: Joi.string().required(),
+  });
+  validateRequest(req, next, schema);
 }
 
 function registerSchema(req, res, next) {

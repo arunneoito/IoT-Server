@@ -36,7 +36,7 @@ async function authenticate({ email, password, ipAddress }) {
   };
 }
 
-async function refrcshToken({ token, ipAddress }) {
+async function refreshToken({ token, ipAddress }) {
   const refreshToken = await getRefreshToken(token);
   const { account } = refreshToken;
 
@@ -335,6 +335,7 @@ async function sendPasswordResetEmail(account, origin) {
 module.exports = {
   authenticate,
   revokeToken,
+  refreshToken,
   register,
   verifyEmail,
   forgotPassword,
