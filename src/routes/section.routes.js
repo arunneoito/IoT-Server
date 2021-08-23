@@ -32,9 +32,9 @@ function createSection(req, res, next) {
 }
 
 function getUserSections(req, res, next) {
-  SectionService.getSectionTypes()
+  SectionService.getUserSections({ user: req.user })
     .then((data) => {
-      res.status(200).send({ data, message: "Succes", error: false });
+      res.status(200).send({ data, message: "Success", error: false });
     })
     .catch((e) => {
       next(e);
@@ -44,7 +44,7 @@ function getUserSections(req, res, next) {
 function getSectionsTypes(req, res, next) {
   SectionService.getSectionTypes()
     .then((data) => {
-      res.status(200).send({ data, message: "Succes", error: false });
+      res.status(200).send({ data, message: "Success", error: false });
     })
     .catch((e) => {
       next(e);

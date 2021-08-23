@@ -6,7 +6,7 @@ exports.publishToTopic = (topic, data) => {
     messageId: 42,
     qos: 2,
     dup: false,
-    topic: topic,
+    topic,
     payload: Buffer.from(JSON.stringify(data)),
     retain: false,
     properties: {
@@ -19,6 +19,7 @@ exports.publishToTopic = (topic, data) => {
       userProperties: {
         test: "test"
       },
+      // eslint-disable-next-line max-len
       subscriptionIdentifier: 120, // can be an Array in message from broker, if message included in few another subscriptions
       contentType: "test"
     }

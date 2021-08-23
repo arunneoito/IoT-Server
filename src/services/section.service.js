@@ -22,4 +22,10 @@ async function getSectionTypes() {
   const types = await Types.find();
   return types;
 }
-module.exports = { createSection, getSectionTypes };
+
+async function getUserSections({ user }) {
+  const sections = await Sections.find({ account_id: user.account.id });
+  return sections;
+}
+
+module.exports = { createSection, getSectionTypes, getUserSections };

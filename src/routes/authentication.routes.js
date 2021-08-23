@@ -36,7 +36,7 @@ module.exports = router;
 function authenticateSchema(req, res, next) {
   const schema = Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().required(),
+    password: Joi.string().required()
   });
   validateRequest(req, next, schema);
 }
@@ -50,8 +50,7 @@ function authenticate(req, res, next) {
       res.json(account);
     })
     .catch((e) => {
-      console.log(e);
-      res.status(403).send({ message: e, error: true });
+      next(e);
     });
 }
 
@@ -69,7 +68,7 @@ function refreshToken(req, res, next) {
 
 function revokeTokenSchema(req, res, next) {
   const schema = Joi.object({
-    token: Joi.string().empty(""),
+    token: Joi.string().empty("")
   });
   validateRequest(req, next, schema);
 }
@@ -94,7 +93,7 @@ function revokeToken(req, res, next) {
 
 function refreshSchema(req, res, next) {
   const schema = Joi.object({
-    refreshToken: Joi.string().required(),
+    refreshToken: Joi.string().required()
   });
   validateRequest(req, next, schema);
 }
@@ -105,7 +104,7 @@ function registerSchema(req, res, next) {
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+    confirmPassword: Joi.string().valid(Joi.ref("password")).required()
   });
   validateRequest(req, next, schema);
 }
@@ -117,7 +116,7 @@ function register(req, res, next) {
       // eslint-disable-next-line implicit-arrow-linebreak
       res.json({
         message:
-          "Registration successful, please check your email for verification instructions",
+          "Registration successful, please check your email for verification instructions"
       })
     )
     .catch(next);
@@ -125,7 +124,7 @@ function register(req, res, next) {
 
 function verifyEmailSchema(req, res, next) {
   const schema = Joi.object({
-    token: Joi.string().required(),
+    token: Joi.string().required()
   });
   validateRequest(req, next, schema);
 }
@@ -141,7 +140,7 @@ function verifyEmail(req, res, next) {
 
 function forgotPasswordSchema(req, res, next) {
   const schema = Joi.object({
-    email: Joi.string().email().required(),
+    email: Joi.string().email().required()
   });
   validateRequest(req, next, schema);
 }
@@ -151,7 +150,7 @@ function forgotPassword(req, res, next) {
     .forgotPassword(req.body, req.get("origin"))
     .then(() =>
       res.json({
-        message: "Please check your email for password reset instructions",
+        message: "Please check your email for password reset instructions"
       })
     )
     .catch(next);
@@ -159,7 +158,7 @@ function forgotPassword(req, res, next) {
 
 function validateResetTokenSchema(req, res, next) {
   const schema = Joi.object({
-    token: Joi.string().required(),
+    token: Joi.string().required()
   });
   validateRequest(req, next, schema);
 }
@@ -175,7 +174,7 @@ function resetPasswordSchema(req, res, next) {
   const schema = Joi.object({
     token: Joi.string().required(),
     password: Joi.string().min(6).required(),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+    confirmPassword: Joi.string().valid(Joi.ref("password")).required()
   });
   validateRequest(req, next, schema);
 }
@@ -207,7 +206,7 @@ function createSchema(req, res, next) {
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+    confirmPassword: Joi.string().valid(Joi.ref("password")).required()
   });
   validateRequest(req, next, schema);
 }
@@ -226,7 +225,7 @@ function updateSchema(req, res, next) {
     lastName: Joi.string().empty(""),
     email: Joi.string().email().empty(""),
     password: Joi.string().min(6).empty(""),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).empty(""),
+    confirmPassword: Joi.string().valid(Joi.ref("password")).empty("")
   };
 
   // only admins can update role
@@ -254,7 +253,7 @@ function setTokenCookie(res, token) {
   // create cookie with refresh token that expires in 7 days
   const cookieOptions = {
     httpOnly: true,
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   };
   res.cookie("refreshToken", token, cookieOptions);
 }
