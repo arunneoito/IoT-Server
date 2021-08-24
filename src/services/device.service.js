@@ -35,4 +35,13 @@ async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
 }
 
-module.exports = { createDevice, findByIdAndSecret, updateSubscription };
+async function getUserDevices({ user, sectionId }) {
+  const filter = { account_id: user.account.id };
+  if (sectionId) filter.section_id = sectionId;
+  const devices = await Device.find(filter);
+  return devices;
+}
+
+module.exports = {
+  createDevice, findByIdAndSecret, updateSubscription, getUserDevices
+};
