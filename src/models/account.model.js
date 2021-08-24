@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const schema = new Schema({
   email: { type: String, unique: true, required: true },
@@ -29,7 +30,7 @@ schema.virtual("isVerified").get(function () {
 schema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc, ret) {
+  transform(doc, ret) {
     // remove these props when object is serialized
     delete ret._id;
     delete ret.passwordHash;

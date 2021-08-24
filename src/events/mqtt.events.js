@@ -1,7 +1,7 @@
-
+const deviceService = require("../services/device.service");
 
 exports.disconnet = (client) => {
-  console.log("client disconnected : ", client.id);
+  deviceService.updateSubscription(client.device.id, client.id, client.connected);
 };
 
 exports.ack = (packet, client) => {
@@ -9,5 +9,8 @@ exports.ack = (packet, client) => {
 };
 
 exports.subscribe = (subscriptions, client) => {
-  console.log("client subscribed : ", client.id);
+  console.log("new client connected");
+  console.log("name : ", client.device.name);
+  console.log("id : ", client.id);
+  deviceService.updateSubscription(client.device.id, client.id, client.connected);
 };

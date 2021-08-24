@@ -14,8 +14,7 @@ async function createSection({ user, name, typeId }) {
     createdAt: new Date(),
     updatedAt: new Date()
   });
-  const saved = await newSection.save();
-  console.log(saved);
+  await newSection.save();
 }
 
 async function getSectionTypes() {
