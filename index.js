@@ -22,6 +22,7 @@ aedes.on("clientDisconnect", mqttEvents.disconnet);
 
 // authentication middleware to verify the token and validate the connection requests
 aedes.authenticate = mqttAuth.mqttAuth;
+aedes.authorizeSubscribe = mqttAuth.mqttSubAuth;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

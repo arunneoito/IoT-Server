@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post("/create", authorize(), deviceSchema, createDevice);
 router.post("/getUserDevices", authorize(), getUserDevices);
+router.post("/sendToDevice", authorize(), getUserDevices);
 
 function createDevice(req, res, next) {
   deviceService.createDevice({ user: req.user, ...req.body })
@@ -24,7 +25,7 @@ function createDevice(req, res, next) {
 function getUserDevices(req, res, next) {
   deviceService.getUserDevices({ user: req.user, ...req.body })
     .then((d) => {
-      res.status(200).send({ message: "Succes", data: d, error: false });
+      res.status(200).send({ message: "Success", data: d, error: false });
     })
     .catch((e) => {
       next(e);
