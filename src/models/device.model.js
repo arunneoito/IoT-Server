@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
+const channelSchema = new Schema({
+  type: { type: String, required: true },
+  value: { type: String, required: false },
+  name: { type: String, required: true }
+});
+
 const schema = new Schema({
   account_id: { type: String, required: true },
   section_id: { type: String, required: true },
@@ -9,6 +15,7 @@ const schema = new Schema({
   secret: { type: String, required: true },
   client_id: { type: String, required: false },
   connected: { type: Boolean, required: true },
+  channels: [channelSchema],
   createdAt: { type: Date },
   updatedAt: { type: Date }
 });

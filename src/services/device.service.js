@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const Sections = require("../models/section.model");
 const Device = require("../models/device.model");
 
@@ -27,12 +28,37 @@ async function createDevice({ user, name, sectionId }) {
 }
 
 async function findByIdAndSecret(id, secret) {
+  if (!mongoose.isValidObjectId(id)) return null;
   const device = await Device.findOne({ _id: id, secret });
+  return device;
+}
+
+async function findById(deviceId) {
+  if (!mongoose.isValidObjectId(deviceId)) return null;
+  const device = await Device.findOne({ _id: deviceId });
   return device;
 }
 
 async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
+}
+
+async function addDeviceChannel({
+  user,
+  deviceId, name, type, value
+}) {
+  console.log(user);
+  const device = await findById(deviceId);
+  if (!device) throw new Error("Device not found!");
+  if (device.account_id !== user.account.id) throw new Error("User Not Authorized !");
+
+  await Device.updateOne({ _id: device.id }, {
+    $push: {
+      channels: {
+        name, type, value
+      }
+    }
+  });
 }
 
 async function getUserDevices({ user, sectionId }) {
@@ -43,5 +69,5 @@ async function getUserDevices({ user, sectionId }) {
 }
 
 module.exports = {
-  createDevice, findByIdAndSecret, updateSubscription, getUserDevices
+  createDevice, findByIdAndSecret, updateSubscription, getUserDevices, findById, addDeviceChannel
 };
