@@ -1,12 +1,15 @@
-const crypto = require('crypto');
-const mongoose = require('mongoose');
+const crypto = require("crypto");
+const mongoose = require("mongoose");
 const Sections = require("../models/section.model");
 const Device = require("../models/device.model");
 
 function createSecret() {
-  const currentDate = (new Date()).valueOf().toString();
+  const currentDate = new Date().valueOf().toString();
   const random = Math.random().toString();
-  return crypto.createHash('sha1').update(currentDate + random).digest('hex');
+  return crypto
+    .createHash("sha1")
+    .update(currentDate + random)
+    .digest("hex");
 }
 
 async function createDevice({ user, name, sectionId }) {
@@ -44,21 +47,26 @@ async function updateSubscription(id, clientId, connected) {
 }
 
 async function addDeviceChannel({
-  user,
-  deviceId, name, type, value
+  user, deviceId, name, type, value
 }) {
-  console.log(user);
   const device = await findById(deviceId);
   if (!device) throw new Error("Device not found!");
-  if (device.account_id !== user.account.id) throw new Error("User Not Authorized !");
+  if (device.account_id !== user.account.id) {
+    throw new Error("User Not Authorized !");
+  }
 
-  await Device.updateOne({ _id: device.id }, {
-    $push: {
-      channels: {
-        name, type, value
+  await Device.updateOne(
+    { _id: device.id },
+    {
+      $push: {
+        channels: {
+          name,
+          type,
+          value
+        }
       }
     }
-  });
+  );
 }
 
 async function getUserDevices({ user, sectionId }) {
@@ -68,6 +76,23 @@ async function getUserDevices({ user, sectionId }) {
   return devices;
 }
 
+async function deleteDevice(accountId, deviceId) {
+  const types = await Device.deleteOne({
+    _id: deviceId,
+    account_id: accountId
+  });
+  if (types.ok === 1 && types.deletedCount > 0) {
+    return "Device Deleted";
+  }
+  return "No device found for this id !";
+}
+
 module.exports = {
-  createDevice, findByIdAndSecret, updateSubscription, getUserDevices, findById, addDeviceChannel
+  createDevice,
+  findByIdAndSecret,
+  updateSubscription,
+  getUserDevices,
+  findById,
+  addDeviceChannel,
+  deleteDevice
 };

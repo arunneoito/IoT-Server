@@ -15,10 +15,17 @@ router.post("/getUserDevices", authorize(), getUserDevices);
 router.post("/createChannel", authorize(), channelSchema, addDeviceChannel);
 router.post("/sendToDevice", authorize(), sendMsgSchema, sendMessageToDevice);
 
+router.post("/updateChannel", authorize(), sendMsgSchema, sendMessageToDevice);
+
+router.delete("/delete/:device_id", authorize(), deleteDevice);
+
 function createDevice(req, res, next) {
-  deviceService.createDevice({ user: req.user, ...req.body })
+  deviceService
+    .createDevice({ user: req.user, ...req.body })
     .then((d) => {
-      res.status(200).send({ message: "Created Succesfully", data: d, error: false });
+      res
+        .status(200)
+        .send({ message: "Created Succesfully", data: d, error: false });
     })
     .catch((e) => {
       next(e);
@@ -26,7 +33,8 @@ function createDevice(req, res, next) {
 }
 
 function getUserDevices(req, res, next) {
-  deviceService.getUserDevices({ user: req.user, ...req.body })
+  deviceService
+    .getUserDevices({ user: req.user, ...req.body })
     .then((d) => {
       res.status(200).send({ message: "Success", data: d, error: false });
     })
@@ -36,9 +44,22 @@ function getUserDevices(req, res, next) {
 }
 
 function addDeviceChannel(req, res, next) {
-  deviceService.addDeviceChannel({ user: req.user, ...req.body }).then((d) => {
-    res.status(200).send({ message: "Success", data: d, error: false });
-  }).catch(next);
+  deviceService
+    .addDeviceChannel({ user: req.user, ...req.body })
+    .then((d) => {
+      res.status(200).send({ message: "Success", data: d, error: false });
+    })
+    .catch(next);
+}
+
+function deleteDevice(req, res, next) {
+  if (!req.params.device_id) throw new Error("Invalid REquest");
+  deviceService
+    .deleteDevice(req.user.id, req.params.device_id)
+    .then((d) => {
+      res.status(200).send({ message: d, error: false });
+    })
+    .catch(next);
 }
 
 async function sendMessageToDevice(req, res, next) {
