@@ -111,7 +111,7 @@ function deviceSchema(req, res, next) {
 
 function sendMsgSchema(req, res, next) {
   const schema = Joi.object({
-    message: Joi.string().required(),
+    message: Joi.object().required(),
     deviceId: Joi.string().required()
   });
   validateRequest(req, next, schema);
