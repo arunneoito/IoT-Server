@@ -2,6 +2,7 @@
 
 const express = require("express");
 const Joi = require("joi");
+const mongoose = require("mongoose");
 const authorize = require("../middlewares/auth.middleware");
 const validateRequest = require("../middlewares/validation.middleware");
 const deviceService = require("../services/device.service");
@@ -16,6 +17,7 @@ router.post("/createChannel", authorize(), channelSchema, addDeviceChannel);
 router.post("/sendToDevice", authorize(), sendMsgSchema, sendMessageToDevice);
 
 router.post("/updateChannel", authorize(), sendMsgSchema, sendMessageToDevice);
+router.put("/update/:device_id", authorize(), updateDevice);
 
 router.delete("/delete/:device_id", authorize(), deleteDevice);
 
@@ -62,13 +64,37 @@ function deleteDevice(req, res, next) {
     .catch(next);
 }
 
+function updateDevice(req, res, next) {
+  if (!mongoose.isValidObjectId(req.params.device_id)) {
+    throw new Error("Invalid device id !");
+  }
+  const { name } = req.body;
+  if (!name) {
+    throw new Error("Invalid Request ! update parameters missing");
+  }
+  deviceService
+    .updateSection({
+      user: req.user,
+      name,
+      sectionId: req.params.section_id
+    })
+    .then((d) => {
+      res.status(d ? 200 : 404).send({
+        message: d ? "Section Updated" : "Section Not Found !",
+        error: false
+      });
+    })
+    .catch((e) => {
+      next(e);
+    });
+}
 async function sendMessageToDevice(req, res, next) {
   try {
     const { message, deviceId } = req.body;
     const device = await deviceService.findById(deviceId);
     if (!device) throw new Error("Invalid Device Id");
     if (!device.connected) throw new Error("Device Offline");
-    mqttService.publishToTopic(helpers.getDeviceTopic(device), { message });
+    mqttService.publishToTopic(helpers.getDeviceTopic(device), message);
     res.status(200).send({ message: "Message sent", error: false });
   } catch (error) {
     next(error);

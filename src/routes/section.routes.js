@@ -50,7 +50,6 @@ function updateSection(req, res, next) {
     sectionId: req.params.section_id
   })
     .then((d) => {
-      console.log(d);
       res
         .status(d ? 200 : 404)
         .send({
