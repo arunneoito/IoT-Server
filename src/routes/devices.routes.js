@@ -122,6 +122,7 @@ function channelSchema(req, res, next) {
     type: Joi.string().required(),
     value: Joi.string().required(),
     name: Joi.string().required(),
+    port: Joi.number().require(),
     deviceId: Joi.string().required()
   });
   validateRequest(req, next, schema);

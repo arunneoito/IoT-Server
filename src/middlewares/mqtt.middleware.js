@@ -17,6 +17,16 @@ exports.mqttSubAuth = (client, sub, callback) => {
     sub.topic = `${client.device.section_id}/${client.device.id}`;
     return callback(null, sub);
   }
-  console.log("connection refused");
-  return callback(new Error('wrong topic'), null);
+  if (sub.topic === `${client.device.section_id}/#`) {
+    return callback(null, sub);
+  }
+  return callback(new Error("wrong topic"), null);
+};
+
+// eslint-disable-next-line consistent-return
+exports.mqttPublishAuth = (client, packet, callback) => {
+  if (!client.device.secret || !client.device.connected) {
+    return callback(new Error("Invalid Request"));
+  }
+  callback(null);
 };
