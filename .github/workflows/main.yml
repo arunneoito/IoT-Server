@@ -1,5 +1,8 @@
 name: remote ssh command
-on: [push]
+on: 
+ push:
+  branches:
+    - main
 jobs:
 
   build:
@@ -13,4 +16,4 @@ jobs:
         username: ${{ secrets.EC2_IOT_USERNAME }}
         key: ${{ secrets.EC2_IOT_KEY }}
         port: 22
-        script: bash deploy_iot.sh
+        script: bash /home/ubuntu/IoTPlatform/deploy_iot.sh
