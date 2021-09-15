@@ -13,4 +13,4 @@ jobs:
         username: ${{ secrets.EC2_IOT_USERNAME }}
         key: ${{ secrets.EC2_IOT_KEY }}
         port: 22
-        script: bash deploy_iot.sh
+        script: bash test.sh
