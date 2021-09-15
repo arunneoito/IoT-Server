@@ -16,6 +16,7 @@ const accountService = require("../services/authentication.service");
 
 // routes
 router.post("/authenticate", authenticateSchema, authenticate);
+router.get("/getUser", authorize(), getUser);
 router.post("/refresh-token", refreshSchema, refreshToken);
 router.post("/revoke-token", authorize(), revokeTokenSchema, revokeToken);
 router.post("/register", registerSchema, register);
@@ -52,6 +53,21 @@ function authenticate(req, res, next) {
     .catch((e) => {
       next(e);
     });
+}
+
+function getUser(req, res, next) {
+  res.status(200).send({
+    message: "success",
+    data: {
+      id: req.user.account.id,
+      firstName: req.user.account.firstName,
+      lastName: req.user.account.lastName,
+      email: req.user.account.email,
+      role: req.user.account.role,
+      created: req.user.account.created,
+      isVerified: req.user.account.isVerified
+    }
+  });
 }
 
 function refreshToken(req, res, next) {
