@@ -77,7 +77,7 @@ function refreshToken(req, res, next) {
     .refreshToken({ token, ipAddress })
     .then(({ refreshToken, ...account }) => {
       setTokenCookie(res, refreshToken);
-      res.json(account);
+      res.json({ ...account, refreshToken });
     })
     .catch(next);
 }
