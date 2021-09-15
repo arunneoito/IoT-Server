@@ -48,14 +48,13 @@ const connectMongo = () => {
     useUnifiedTopology: true,
     useFindAndModify: false
   };
-  console.log("connecting to the database....");
   mongoose
     .connect(process.env.MONGODB_URI || connectionString, connectionOptions)
     .then(() => {
       console.log("database connected");
     })
     .catch((e) => {
-      console.log(e);
+      console.log("Database connection failed");
     });
 };
 
