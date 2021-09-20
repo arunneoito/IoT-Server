@@ -1,8 +1,20 @@
 /* eslint-disable no-param-reassign */
 
+const jwt = require("jsonwebtoken");
 const deviceService = require("../services/device.service");
+const { secret } = require("../../config.json");
 
+// eslint-disable-next-line consistent-return
 exports.mqttAuth = (client, username, password, callback) => {
+  if (client.username === "mobile-app") {
+    try {
+      const decoded = jwt.verify(password, secret);
+      console.log(decoded);
+    } catch (err) {
+      console.log(err);
+    }
+    return callback(null, false);
+  }
   deviceService.findByIdAndSecret(username, password).then((d) => {
     if (d) {
       client.device = d;
