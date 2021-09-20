@@ -31,6 +31,7 @@ exports.mqttAuth = (client, username, password, callback) => {
 };
 
 exports.mqttSubAuth = (client, sub, callback) => {
+  console.log(client.user);
   if (sub.topic === client.device.id) {
     sub.topic = `${client.device.section_id}/${client.device.id}`;
     return callback(null, sub);
