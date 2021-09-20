@@ -22,19 +22,21 @@ exports.publish = (packet, client) => {
 };
 
 exports.subscribe = (subscriptions, client) => {
-  deviceService.updateSubscription(
-    client.device.id,
-    client.id,
-    client.connected
-  );
-  aedesService.publishToTopic(
-    `${client.device.section_id}/${client.device.id}`,
-    {
-      message: client.device.name,
-      channels: client.device.channels.map((d) => ({
-        value: d.value,
-        type: d.type
-      }))
-    }
-  );
+  if (client.device) {
+    deviceService.updateSubscription(
+      client.device.id,
+      client.id,
+      client.connected
+    );
+    aedesService.publishToTopic(
+      `${client.device.section_id}/${client.device.id}`,
+      {
+        message: client.device.name,
+        channels: client.device.channels.map((d) => ({
+          value: d.value,
+          type: d.type,
+        })),
+      }
+    );
+  }
 };
