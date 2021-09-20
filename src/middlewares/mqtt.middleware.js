@@ -8,7 +8,7 @@ const { secret } = require("../../config.json");
 exports.mqttAuth = (client, username, password, callback) => {
   if (username === "mobile-app") {
     try {
-      const decoded = jwt.verify(password, secret);
+      const decoded = jwt.verify(password.toString(), secret);
       console.log(decoded);
     } catch (err) {
       console.log(err);
