@@ -10,7 +10,7 @@ exports.mqttAuth = (client, username, password, callback) => {
   if (username === "mobile-app") {
     try {
       const decoded = jwt.verify(password.toString(), secret);
-      Account.findById(decoded.id).then((user) => {
+      return Account.findById(decoded.id).then((user) => {
         if (!user) return callback(null, false);
         return callback(null, true);
       });
@@ -19,8 +19,8 @@ exports.mqttAuth = (client, username, password, callback) => {
       return callback(null, false);
     }
   }
-  console.log("here");
-  deviceService.findByIdAndSecret(username, password).then((d) => {
+
+  return deviceService.findByIdAndSecret(username, password).then((d) => {
     if (d) {
       client.device = d;
       return callback(null, true);
