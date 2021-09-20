@@ -17,6 +17,7 @@ exports.mqttAuth = (client, username, password, callback) => {
         return callback(null, true);
       });
     } catch (err) {
+      console.log(err);
       return callback(null, false);
     }
   }
