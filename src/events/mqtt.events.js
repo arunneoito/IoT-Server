@@ -2,12 +2,13 @@ const deviceService = require("../services/device.service");
 const aedesService = require("../services/mqtt.services");
 
 exports.disconnet = (client) => {
-  console.log(client.device.name, "disconnected");
-  deviceService.updateSubscription(
-    client.device.id,
-    client.id,
-    client.connected
-  );
+  if (client.device) {
+    deviceService.updateSubscription(
+      client.device.id,
+      client.id,
+      client.connected
+    );
+  }
 };
 
 exports.ack = (packet, client) => {
