@@ -12,8 +12,6 @@ exports.mqttAuth = (client, username, password, callback) => {
       const decoded = jwt.verify(password.toString(), secret);
       Account.findById(decoded.id).then((user) => {
         if (!user) return callback(null, false);
-        console.log("Succesfully authenticated");
-        client.user = user;
         return callback(null, true);
       });
     } catch (err) {
