@@ -19,6 +19,7 @@ exports.mqttAuth = (client, username, password, callback) => {
       return callback(null, false);
     }
   }
+  console.log("here");
   deviceService.findByIdAndSecret(username, password).then((d) => {
     if (d) {
       client.device = d;
