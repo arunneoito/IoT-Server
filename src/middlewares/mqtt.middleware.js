@@ -12,6 +12,7 @@ exports.mqttAuth = (client, username, password, callback) => {
       const decoded = jwt.verify(password.toString(), secret);
       return Account.findById(decoded.id).then((user) => {
         if (!user) return callback(null, false);
+        client.user = user;
         return callback(null, true);
       });
     } catch (err) {
@@ -30,11 +31,16 @@ exports.mqttAuth = (client, username, password, callback) => {
 };
 
 exports.mqttSubAuth = (client, sub, callback) => {
-  if (sub.topic === client.device.id) {
-    sub.topic = `${client.device.section_id}/${client.device.id}`;
+  // authentication for hardware
+
+  if (client.device) {
+    sub.topic = `${client.device.account_id}/${client.device.section_id}/${client.device.id}`;
     return callback(null, sub);
   }
-  if (sub.topic === `${client.device.section_id}/#`) {
+
+  // authentication for application
+  if (client.user) {
+    sub.topic = `${client.user.id}/#`;
     return callback(null, sub);
   }
   return callback(new Error("wrong topic"), null);
