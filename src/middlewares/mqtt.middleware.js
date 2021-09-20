@@ -7,6 +7,7 @@ const { secret } = require("../../config.json");
 // eslint-disable-next-line consistent-return
 exports.mqttAuth = (client, username, password, callback) => {
   console.log(client.username === "mobile-app");
+  console.log(client.username);
   if (client.username === "mobile-app") {
     try {
       const decoded = jwt.verify(password, secret);
