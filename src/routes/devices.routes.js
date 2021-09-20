@@ -73,15 +73,11 @@ function updateDevice(req, res, next) {
     throw new Error("Invalid Request ! update parameters missing");
   }
   deviceService
-    .updateSection({
-      user: req.user,
-      name,
-      sectionId: req.params.section_id
-    })
+    .updateDevice({ name }, req.params.device_id)
     .then((d) => {
       res.status(d ? 200 : 404).send({
-        message: d ? "Section Updated" : "Section Not Found !",
-        error: false
+        message: d ? "Device Updated" : "Device Not Found !",
+        error: false,
       });
     })
     .catch((e) => {
@@ -104,7 +100,7 @@ async function sendMessageToDevice(req, res, next) {
 function deviceSchema(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().required(),
-    sectionId: Joi.string().required()
+    sectionId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }
@@ -112,7 +108,7 @@ function deviceSchema(req, res, next) {
 function sendMsgSchema(req, res, next) {
   const schema = Joi.object({
     message: Joi.object().required(),
-    deviceId: Joi.string().required()
+    deviceId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }
@@ -123,7 +119,7 @@ function channelSchema(req, res, next) {
     value: Joi.string().required(),
     name: Joi.string().required(),
     port: Joi.number().require(),
-    deviceId: Joi.string().required()
+    deviceId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }

@@ -46,7 +46,7 @@ const connectMongo = () => {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
   };
   mongoose
     .connect(process.env.MONGODB_URI || connectionString, connectionOptions)

@@ -24,9 +24,17 @@ async function createDevice({ user, name, sectionId }) {
     connected: false,
     secret: createSecret(),
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   });
   const device = await newDevice.save();
+  return device;
+}
+
+async function updateDevice(update, deviceId) {
+  if (!mongoose.isValidObjectId(deviceId)) return false;
+  const device = await Device.findOneAndUpdate({ _id: deviceId }, update, {
+    new: true,
+  });
   return device;
 }
 
@@ -46,15 +54,12 @@ async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
 }
 
-async function addDeviceChannel({
-  user, deviceId, name, type, value
-}) {
+async function addDeviceChannel({ user, deviceId, name, type, value }) {
   const device = await findById(deviceId);
   if (!device) throw new Error("Device not found!");
   if (device.account_id !== user.account.id) {
     throw new Error("User Not Authorized !");
   }
-
   await Device.updateOne(
     { _id: device.id },
     {
@@ -62,9 +67,9 @@ async function addDeviceChannel({
         channels: {
           name,
           type,
-          value
-        }
-      }
+          value,
+        },
+      },
     }
   );
 }
@@ -79,7 +84,7 @@ async function getUserDevices({ user, sectionId }) {
 async function deleteDevice(accountId, deviceId) {
   const types = await Device.deleteOne({
     _id: deviceId,
-    account_id: accountId
+    account_id: accountId,
   });
   if (types.ok === 1 && types.deletedCount > 0) {
     return "Device Deleted";
@@ -94,5 +99,6 @@ module.exports = {
   getUserDevices,
   findById,
   addDeviceChannel,
-  deleteDevice
+  deleteDevice,
+  updateDevice,
 };

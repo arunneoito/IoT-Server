@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { deviceUpdated } = require("../events/device.events");
 
 const { Schema } = mongoose;
 
@@ -6,7 +7,7 @@ const channelSchema = new Schema({
   type: { type: String, required: true },
   value: { type: String, required: false },
   name: { type: String, required: true },
-  port: { type: Number, required: true }
+  port: { type: Number, required: true },
 });
 
 const schema = new Schema({
@@ -18,7 +19,9 @@ const schema = new Schema({
   connected: { type: Boolean, required: true },
   channels: [channelSchema],
   createdAt: { type: Date },
-  updatedAt: { type: Date }
+  updatedAt: { type: Date },
 });
+
+schema.post("findOneAndUpdate", deviceUpdated);
 
 module.exports = mongoose.model("Device", schema);
