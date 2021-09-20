@@ -7,9 +7,8 @@ exports.deviceUpdated = (device) => {
     aedesService.publishToTopic(
       `${device.account_id}/${device.section_id}/${device.id}`,
       {
-        data: device
-      })
-  }
+        data: device,
+      }
     );
-}
+  }
 };
