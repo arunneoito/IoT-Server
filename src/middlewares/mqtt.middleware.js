@@ -3,17 +3,21 @@
 const jwt = require("jsonwebtoken");
 const deviceService = require("../services/device.service");
 const { secret } = require("../../config.json");
+const Account = require("../models/account.model");
 
 // eslint-disable-next-line consistent-return
 exports.mqttAuth = (client, username, password, callback) => {
   if (username === "mobile-app") {
     try {
       const decoded = jwt.verify(password.toString(), secret);
-      console.log(decoded);
+      Account.findById(decoded.id).then((user) => {
+        if (!user) return callback(null, false);
+        client.user = user;
+        return callback(null, true);
+      });
     } catch (err) {
-      console.log(err);
+      return callback(null, false);
     }
-    return callback(null, false);
   }
   deviceService.findByIdAndSecret(username, password).then((d) => {
     if (d) {
