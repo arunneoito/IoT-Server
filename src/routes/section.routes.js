@@ -12,17 +12,14 @@ const validateRequest = require("../middlewares/validation.middleware");
 
 router.get("/getSectionTypes", authorize(), getSectionsTypes);
 router.get("/getUserSection", authorize(), getUserSections);
-
 router.post("/create", authorize(), sectionSchema, createSection);
-
 router.put("/update/:section_id", authorize(), updateSection);
-
 router.delete("/delete/:section_id", authorize(), deleteSection);
 
 function sectionSchema(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().required(),
-    typeId: Joi.string().required()
+    typeId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }
@@ -38,7 +35,9 @@ function createSection(req, res, next) {
 }
 
 function updateSection(req, res, next) {
-  if (!mongoose.isValidObjectId(req.params.section_id)) { throw new Error("Invalid section id !"); }
+  if (!mongoose.isValidObjectId(req.params.section_id)) {
+    throw new Error("Invalid section id !");
+  }
   const { name, type } = req.body;
   if (!name && !type) {
     throw new Error("Invalid Request ! update parameters missing");
@@ -47,15 +46,13 @@ function updateSection(req, res, next) {
     user: req.user,
     name,
     type,
-    sectionId: req.params.section_id
+    sectionId: req.params.section_id,
   })
     .then((d) => {
-      res
-        .status(d ? 200 : 404)
-        .send({
-          message: d ? "Section Updated" : "Section Not Found !",
-          error: false
-        });
+      res.status(d ? 200 : 404).send({
+        message: d ? "Section Updated" : "Section Not Found !",
+        error: false,
+      });
     })
     .catch((e) => {
       next(e);

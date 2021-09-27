@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Sections = require("../models/section.model");
 const Device = require("../models/device.model");
+const { validateValue } = require("../../utils/helpers");
 
 function createSecret() {
   const currentDate = new Date().valueOf().toString();
@@ -54,7 +56,18 @@ async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
 }
 
-async function addDeviceChannel({ user, deviceId, name, type, value }) {
+async function addDeviceChannel({
+  user,
+  value,
+  name,
+  port,
+  inout,
+  value_type,
+  deviceId,
+}) {
+  if (!validateValue(value, value_type)) {
+    throw new Error("Invalid value for device value type");
+  }
   const device = await findById(deviceId);
   if (!device) throw new Error("Device not found!");
   if (device.account_id !== user.account.id) {
@@ -66,8 +79,10 @@ async function addDeviceChannel({ user, deviceId, name, type, value }) {
       $push: {
         channels: {
           name,
-          type,
+          port,
           value,
+          value_type,
+          inout,
         },
       },
     }
@@ -91,6 +106,39 @@ async function deleteDevice(accountId, deviceId) {
   }
   return "No device found for this id !";
 }
+async function deleteChannel(accountId, deviceId, channelId) {
+  if (
+    !mongoose.isValidObjectId(deviceId) ||
+    !mongoose.isValidObjectId(channelId)
+  ) {
+    throw new Error("not found");
+  }
+  const device = await Device.updateOne(
+    {
+      _id: deviceId,
+      account_id: accountId,
+    },
+    {
+      $pull: { channels: { _id: channelId } },
+    }
+  );
+  return device.nModified > 0
+    ? "Channle Deleted"
+    : "No device found for this id !";
+}
+
+async function updateChannel(deviceId, channelId, value) {
+  const updated = await Device.update(
+    {
+      _id: deviceId,
+      "channels._id": channelId,
+    },
+    {
+      $set: { "channels.$.value": value },
+    }
+  );
+  return updated;
+}
 
 module.exports = {
   createDevice,
@@ -101,4 +149,6 @@ module.exports = {
   addDeviceChannel,
   deleteDevice,
   updateDevice,
+  deleteChannel,
+  updateChannel,
 };

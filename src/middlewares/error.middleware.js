@@ -1,4 +1,5 @@
-function errorHandler(err, req, res) {
+// eslint-disable-next-line no-unused-vars
+function errorHandler(err, req, res, next) {
   switch (true) {
     case typeof err === "string":
       // custom application error

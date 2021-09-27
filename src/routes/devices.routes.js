@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-use-before-define */
 
 const express = require("express");
@@ -15,11 +16,19 @@ router.post("/create", authorize(), deviceSchema, createDevice);
 router.post("/getUserDevices", authorize(), getUserDevices);
 router.post("/createChannel", authorize(), channelSchema, addDeviceChannel);
 router.post("/sendToDevice", authorize(), sendMsgSchema, sendMessageToDevice);
-
-router.post("/updateChannel", authorize(), sendMsgSchema, sendMessageToDevice);
+router.post(
+  "/updateChannel",
+  authorize(),
+  updateChannelSchema,
+  updateDeviceChannel
+);
 router.put("/update/:device_id", authorize(), updateDevice);
-
 router.delete("/delete/:device_id", authorize(), deleteDevice);
+router.delete(
+  "/deleteChannel/:deviceId/:channelId",
+  authorize(),
+  deleteChannel
+);
 
 function createDevice(req, res, next) {
   deviceService
@@ -64,6 +73,22 @@ function deleteDevice(req, res, next) {
     .catch(next);
 }
 
+function deleteChannel(req, res, next) {
+  if (!req.params.deviceId) {
+    throw new Error("Invalid Request , require deviceId");
+  }
+  if (!req.params.channelId) {
+    throw new Error("Invalid Request , require channelId");
+  }
+  const { deviceId, channelId } = req.params;
+  deviceService
+    .deleteChannel(req.user.id, deviceId, channelId)
+    .then((d) => {
+      res.status(200).send({ message: d, error: false });
+    })
+    .catch(next);
+}
+
 function updateDevice(req, res, next) {
   if (!mongoose.isValidObjectId(req.params.device_id)) {
     throw new Error("Invalid device id !");
@@ -97,6 +122,28 @@ async function sendMessageToDevice(req, res, next) {
   }
 }
 
+async function updateDeviceChannel(req, res, next) {
+  try {
+    const { deviceId, channelId, value } = req.body;
+    const device = await deviceService.findById(deviceId);
+    if (!device) throw new Error("Invalid Device Id");
+    const channel = device.channels.find((d) => channelId === d._id.toString());
+    if (!channel) throw new Error("Invalid channel Id");
+    if (!helpers.validateValue(value, channel.value_type)) {
+      throw new Error("Invalid value for device value type");
+    }
+    const updated = await deviceService.updateChannel(
+      deviceId,
+      channelId,
+      value
+    );
+    console.log(updated);
+    res.status(200).send({ message: "Message sent", error: false });
+  } catch (error) {
+    next(error);
+  }
+}
+
 function deviceSchema(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().required(),
@@ -113,12 +160,22 @@ function sendMsgSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
+function updateChannelSchema(req, res, next) {
+  const schema = Joi.object({
+    channelId: Joi.string().required(),
+    deviceId: Joi.string().required(),
+    value: Joi.any().required(),
+  });
+  validateRequest(req, next, schema);
+}
+
 function channelSchema(req, res, next) {
   const schema = Joi.object({
-    type: Joi.string().required(),
-    value: Joi.string().required(),
+    value: Joi.any().required(),
     name: Joi.string().required(),
-    port: Joi.number().require(),
+    port: Joi.number().required(),
+    inout: Joi.boolean().required(),
+    value_type: Joi.string().valid("string", "boolean", "number"),
     deviceId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
