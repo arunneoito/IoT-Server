@@ -24,6 +24,8 @@ exports.publish = (packet, client) => {
 };
 
 exports.subscribe = (subscriptions, client) => {
+  console.log("client subscribed");
+
   if (client.device) {
     deviceService.updateSubscription(
       client.device.id,
