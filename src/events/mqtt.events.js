@@ -2,6 +2,7 @@ const deviceService = require("../services/device.service");
 const aedesService = require("../services/mqtt.services");
 
 exports.disconnet = (client) => {
+  console.log("client disconnect");
   if (client.device) {
     deviceService.updateSubscription(
       client.device.id,
