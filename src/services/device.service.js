@@ -128,7 +128,7 @@ async function deleteChannel(accountId, deviceId, channelId) {
 }
 
 async function updateChannel(deviceId, channelId, value) {
-  const updated = await Device.update(
+  const updated = await Device.updateOne(
     {
       _id: deviceId,
       "channels._id": channelId,

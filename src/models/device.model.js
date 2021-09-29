@@ -24,5 +24,6 @@ const schema = new Schema({
 });
 
 schema.post("findOneAndUpdate", deviceUpdated);
+schema.post("updateOne", deviceUpdated);
 
 module.exports = mongoose.model("Device", schema);
