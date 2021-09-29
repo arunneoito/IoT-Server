@@ -128,7 +128,7 @@ async function deleteChannel(accountId, deviceId, channelId) {
 }
 
 async function updateChannel(deviceId, channelId, value) {
-  const updated = await Device.updateOne(
+  const updated = await Device.findOneAndUpdate(
     {
       _id: deviceId,
       "channels._id": channelId,
@@ -136,7 +136,7 @@ async function updateChannel(deviceId, channelId, value) {
     {
       $set: { "channels.$.value": value },
     },
-    { new: true, returnDocument: true }
+    { new: true }
   );
   return updated;
 }

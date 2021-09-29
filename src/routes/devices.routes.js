@@ -137,8 +137,9 @@ async function updateDeviceChannel(req, res, next) {
       channelId,
       value
     );
-    console.log(updated);
-    res.status(200).send({ message: "Message sent", error: false });
+    res
+      .status(200)
+      .send({ message: "Message sent", data: updated, error: false });
   } catch (error) {
     next(error);
   }
