@@ -135,7 +135,8 @@ async function updateChannel(deviceId, channelId, value) {
     },
     {
       $set: { "channels.$.value": value },
-    }
+    },
+    { new: true }
   );
   return updated;
 }
