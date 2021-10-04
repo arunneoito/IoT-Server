@@ -9,7 +9,7 @@ exports.deviceUpdated = (device) => {
       // eslint-disable-next-line no-underscore-dangle
       helpers.getDeviceTopic(device),
       {
-        data: "sample message",
+        data: device.channels,
       }
     );
   }
