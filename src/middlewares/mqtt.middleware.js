@@ -34,7 +34,8 @@ exports.mqttSubAuth = (client, sub, callback) => {
   // authentication for hardware
 
   if (client.device) {
-    sub.topic = `${client.device.account_id}/${client.device.section_id}/${client.device.id}`;
+    // eslint-disable-next-line no-underscore-dangle
+    sub.topic = `${client.device.account_id}/${client.device.section_id}/${client.device._id}`;
     return callback(null, sub);
   }
 
