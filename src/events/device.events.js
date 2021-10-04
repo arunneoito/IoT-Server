@@ -3,6 +3,7 @@ const aedesService = require("../services/mqtt.services");
 
 exports.deviceUpdated = (device) => {
   console.log("device update event triggered");
+  console.log(device);
   if (device) {
     delete device.secret;
     aedesService.publishToTopic(
