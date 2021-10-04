@@ -9,7 +9,10 @@ exports.deviceUpdated = (device) => {
       // eslint-disable-next-line no-underscore-dangle
       helpers.getDeviceTopic(device),
       {
-        data: JSON.stringify(device.channels),
+        data: device.channels.map((d) => ({
+          port: d.port,
+          value: d.value,
+        })),
       }
     );
   }
