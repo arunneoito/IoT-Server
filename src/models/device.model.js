@@ -11,7 +11,7 @@ const channelSchema = new Schema({
   input: { type: Boolean, required: true },
 });
 
-Numberconst schema = new Schema({
+const schema = new Schema({
   account_id: { type: String, required: true },
   section_id: { type: String, required: true },
   name: { type: String, required: true },
