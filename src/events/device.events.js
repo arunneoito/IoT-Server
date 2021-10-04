@@ -7,7 +7,8 @@ exports.deviceUpdated = (device) => {
   if (device) {
     delete device.secret;
     aedesService.publishToTopic(
-      `${device.account_id}/${device.section_id}/${device.id}`,
+      // eslint-disable-next-line no-underscore-dangle
+      `${device.account_id}/${device.section_id}/${device._id}`,
       {
         data: device,
       }
