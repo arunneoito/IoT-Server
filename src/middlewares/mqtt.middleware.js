@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const deviceService = require("../services/device.service");
 const { secret } = require("../../config.json");
 const Account = require("../models/account.model");
+const helperFunctions = require("../../utils/helpers");
 
 // eslint-disable-next-line consistent-return
 exports.mqttAuth = (client, username, password, callback) => {
@@ -35,10 +36,7 @@ exports.mqttSubAuth = (client, sub, callback) => {
 
   if (client.device) {
     // eslint-disable-next-line no-underscore-dangle
-    console.log(
-      `${client.device.account_id}/${client.device.section_id}/${client.device._id}`
-    );
-    sub.topic = `${client.device.account_id}/${client.device.section_id}/${client.device._id}`;
+    sub.topic = helperFunctions.getDeviceTopic(client.device);
     return callback(null, sub);
   }
 
