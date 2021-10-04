@@ -4,14 +4,14 @@ const { deviceUpdated } = require("../events/device.events");
 const { Schema } = mongoose;
 
 const channelSchema = new Schema({
-  value: { type: Schema.Types.Mixed, required: false },
+  type: { type: String, required: true },
+  value: { type: String, required: false },
   name: { type: String, required: true },
   port: { type: Number, required: true },
-  inout: { type: Boolean, required: true }, // if port is input inout = true otherwise false
-  value_type: { type: String, required: true }, // string | number | boolean
+  input: { type: Boolean, required: true },
 });
 
-const schema = new Schema({
+Numberconst schema = new Schema({
   account_id: { type: String, required: true },
   section_id: { type: String, required: true },
   name: { type: String, required: true },

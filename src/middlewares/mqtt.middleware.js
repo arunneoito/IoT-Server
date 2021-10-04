@@ -47,9 +47,9 @@ exports.mqttSubAuth = (client, sub, callback) => {
 };
 
 // eslint-disable-next-line consistent-return
-exports.mqttPublishAuth = (client, packet, callback) => {
-  if (!client.device.secret || !client.device.connected) {
-    return callback(new Error("Invalid Request"));
-  }
-  callback(null);
-};
+// exports.mqttPublishAuth = (client, packet, callback) => {
+//   if (!client.device.secret || !client.device.connected) {
+//     return callback(new Error("Invalid Request"));
+//   }
+//   callback(null);
+// };
