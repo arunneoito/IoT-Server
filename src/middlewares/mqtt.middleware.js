@@ -35,6 +35,9 @@ exports.mqttSubAuth = (client, sub, callback) => {
 
   if (client.device) {
     // eslint-disable-next-line no-underscore-dangle
+    console.log(
+      `${client.device.account_id}/${client.device.section_id}/${client.device._id}`
+    );
     sub.topic = `${client.device.account_id}/${client.device.section_id}/${client.device._id}`;
     return callback(null, sub);
   }
