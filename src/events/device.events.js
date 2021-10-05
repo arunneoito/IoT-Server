@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 const aedesService = require("../services/mqtt.services");
 const helpers = require("../../utils/helpers");
@@ -18,6 +19,7 @@ exports.deviceUpdated = (device) => {
       helpers.getDeviceTopic(device),
       {
         data,
+        deviceId: device._id,
       }
     );
   }

@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/create", authorize(), deviceSchema, createDevice);
 router.post("/getUserDevices", authorize(), getUserDevices);
-router.post("/createChannel", authorize(), channelSchema, addDeviceChannel);
+router.post("/createChannel", deviceApiAuth, channelSchema, addDeviceChannel);
 router.post("/sendToDevice", authorize(), sendMsgSchema, sendMessageToDevice);
 router.post(
   "/updateChannel",
@@ -185,6 +185,13 @@ function channelSchema(req, res, next) {
   });
 
   validateRequest(req, next, schema);
+}
+
+function deviceApiAuth(req, res, next) {
+  deviceService.findByIdAndSecret(req.deviceId, req.deviceSecret).then((d) => {
+    if (d) next();
+    return res.status(401).json({ message: "Invalid Credentials !" });
+  });
 }
 
 module.exports = router;
