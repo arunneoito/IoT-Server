@@ -14,7 +14,7 @@ exports.deviceUpdated = (device) => {
           port: d.port,
           value: d.value,
           type: d.type,
-          inout: d.inout,
+          input: d.input,
         })),
       }
     );

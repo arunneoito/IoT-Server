@@ -8,7 +8,7 @@ const channelSchema = new Schema({
   value: { type: String, required: false },
   name: { type: String, required: true },
   port: { type: Number, required: true },
-  input: { type: Boolean, required: true },
+  inout: { type: Boolean, required: true },
 });
 
 const schema = new Schema({
