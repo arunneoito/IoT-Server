@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Sections = require("../models/section.model");
@@ -56,18 +56,13 @@ async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
 }
 
-async function addDeviceChannel({
-  user,
-  value,
-  name,
-  port,
-  inout,
-  value_type,
-  deviceId,
-}) {
-  if (!validateValue(value, value_type)) {
-    throw new Error("Invalid value for device value type");
-  }
+async function addDeviceChannels({ user, deviceId, channels }) {
+  channels.forEach((element) => {
+    if (!validateValue(element.value, element.value_type)) {
+      throw new Error("Invalid value for device value type");
+    }
+  });
+
   const device = await findById(deviceId);
   if (!device) throw new Error("Device not found!");
   if (device.account_id !== user.account.id) {
@@ -78,11 +73,7 @@ async function addDeviceChannel({
     {
       $push: {
         channels: {
-          name,
-          port,
-          value,
-          value_type,
-          inout,
+          $each: channels,
         },
       },
     }
@@ -147,7 +138,7 @@ module.exports = {
   updateSubscription,
   getUserDevices,
   findById,
-  addDeviceChannel,
+  addDeviceChannels,
   deleteDevice,
   updateDevice,
   deleteChannel,

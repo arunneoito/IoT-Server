@@ -4,7 +4,7 @@ const { deviceUpdated } = require("../events/device.events");
 const { Schema } = mongoose;
 
 const channelSchema = new Schema({
-  type: { type: String, required: true },
+  value_type: { type: String, required: true },
   value: { type: String, required: false },
   name: { type: String, required: true },
   port: { type: Number, required: true },

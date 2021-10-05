@@ -56,7 +56,7 @@ function getUserDevices(req, res, next) {
 
 function addDeviceChannel(req, res, next) {
   deviceService
-    .addDeviceChannel({ user: req.user, ...req.body })
+    .addDeviceChannels({ user: req.user, ...req.body })
     .then((d) => {
       res.status(200).send({ message: "Success", data: d, error: false });
     })
@@ -171,14 +171,19 @@ function updateChannelSchema(req, res, next) {
 }
 
 function channelSchema(req, res, next) {
-  const schema = Joi.object({
+  const channel = Joi.object().keys({
     value: Joi.any().required(),
     name: Joi.string().required(),
     port: Joi.number().required(),
     inout: Joi.boolean().required(),
     value_type: Joi.string().valid("string", "boolean", "number"),
+  });
+
+  const schema = Joi.object({
+    channels: Joi.array().items(channel).required(),
     deviceId: Joi.string().required(),
   });
+
   validateRequest(req, next, schema);
 }
 
