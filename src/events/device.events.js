@@ -13,8 +13,8 @@ exports.deviceUpdated = (device) => {
         data: device.channels.map((d) => ({
           port: d.port,
           value: d.value,
-          type: d.type,
-          input: d.input,
+          value_type: d.value_type,
+          inout: d.inout,
         })),
       }
     );
