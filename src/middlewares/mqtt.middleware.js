@@ -48,6 +48,24 @@ exports.mqttSubAuth = (client, sub, callback) => {
   return callback(new Error("wrong topic"), null);
 };
 
+exports.deviceApiAuth = () => [
+  async (req, res, next) => {
+    const device = await deviceService.findByIdAndSecret(
+      req.body.deviceId,
+      req.body.deviceSecret
+    );
+    if (device) {
+      const user = await Account.findById(device.account_id);
+      if (user) {
+        req.user = { account: user };
+      }
+      next();
+    } else {
+      res.status(401).json({ message: "Invalid Credentials !" });
+    }
+  },
+];
+
 // eslint-disable-next-line consistent-return
 // exports.mqttPublishAuth = (client, packet, callback) => {
 //   if (!client.device.secret || !client.device.connected) {
