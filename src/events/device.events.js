@@ -18,8 +18,8 @@ exports.deviceUpdated = (device) => {
       // eslint-disable-next-line no-underscore-dangle
       helpers.getDeviceTopic(device),
       {
-        data,
-        deviceId: device._id,
+        data:data,
+        deviceId: device._id.toString(),
       }
     );
   }
