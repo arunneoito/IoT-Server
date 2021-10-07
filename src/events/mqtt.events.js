@@ -1,5 +1,6 @@
 const deviceService = require("../services/device.service");
 const aedesService = require("../services/mqtt.services");
+const helperFunctions = require("../../utils/helpers");
 
 exports.disconnet = (client) => {
   console.log("client disconnect");
@@ -33,7 +34,7 @@ exports.subscribe = (subscriptions, client) => {
       client.connected
     );
     aedesService.publishToTopic(
-      `${client.device.section_id}/${client.device.id}`,
+      helperFunctions.getDeviceTopic(client.device),
       {
         message: client.device.name,
         channels: client.device.channels.map((d) => ({
