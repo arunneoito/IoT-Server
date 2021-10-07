@@ -9,8 +9,8 @@ exports.deviceUpdated = (device) => {
     const data = device.channels.map((d) => ({
       port: d.port,
       value: d.value,
-      // valueType: d.value_type,
-      // inout: d.inout,
+      valueType: d.value_type,
+      inout: d.inout,
     }));
 
     delete device.secret;
