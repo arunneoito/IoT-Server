@@ -24,7 +24,7 @@ exports.deviceUpdated = (device) => {
     aedesService.publishToTopic(
       // eslint-disable-next-line no-underscore-dangle
       `${device.account_id}`,
-      device
+      { data: device }
     );
   }
 };
