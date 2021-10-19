@@ -24,7 +24,7 @@ aedes.on("publish", mqttEvents.publish);
 // authentication middleware to verify the token and validate the connection requests
 aedes.authenticate = mqttAuth.mqttAuth;
 aedes.authorizeSubscribe = mqttAuth.mqttSubAuth;
-aedes.authorizePublish = mqttAuth.mqttPublishAuth;
+// aedes.authorizePublish = mqttAuth.mqttPublishAuth;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

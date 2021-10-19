@@ -25,23 +25,18 @@ exports.publish = (packet, client) => {
 };
 
 exports.subscribe = (subscriptions, client) => {
-  console.log("client subscribed");
-
   if (client.device) {
     deviceService.updateSubscription(
       client.device.id,
       client.id,
       client.connected
     );
-    aedesService.publishToTopic(
-      helperFunctions.getDeviceTopic(client.device),
-      {
-        message: client.device.name,
-        channels: client.device.channels.map((d) => ({
-          value: d.value,
-          type: d.type,
-        })),
-      }
-    );
+    aedesService.publishToTopic(helperFunctions.getDeviceTopic(client.device), {
+      message: client.device.name,
+      channels: client.device.channels.map((d) => ({
+        value: d.value,
+        type: d.type,
+      })),
+    });
   }
 };
