@@ -142,6 +142,7 @@ async function updateDeviceChannel(req, res, next) {
       .status(200)
       .send({ message: "Message sent", data: updated, error: false });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
