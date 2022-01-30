@@ -67,7 +67,6 @@ function getUserDevices(req, res, next) {
 function getDeviceChannels(req, res, next) {
   deviceService
     .getDeviceChannels({
-      user: req.user,
       device: req.device,
       name: req.headers.name,
     })

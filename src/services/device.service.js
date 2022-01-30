@@ -57,7 +57,7 @@ async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
 }
 
-async function getDeviceChannels({ user, device, name }) {
+async function getDeviceChannels({ device, name }) {
   const deviceChannel = await DeviceType.findOne({ name });
   if (!deviceChannel) {
     throw new Error("invalid device name provided");

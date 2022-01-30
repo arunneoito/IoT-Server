@@ -25,12 +25,33 @@ exports.publish = (packet, client) => {
 };
 
 exports.subscribe = (subscriptions, client) => {
-  if (client.device) {
-    deviceService.updateSubscription(
-      client.device.id,
-      client.id,
-      client.connected
-    );
+  if (!client.device) return;
+
+  deviceService.updateSubscription(
+    client.device.id,
+    client.id,
+    client.connected
+  );
+
+  if (client.device.channels.length === 0) {
+    deviceService
+      .getDeviceChannels({
+        device: client.device,
+        name: client.id.split("-")[0],
+      })
+      .then((device) => {
+        aedesService.publishToTopic(
+          helperFunctions.getDeviceTopic(client.device),
+          {
+            message: client.device.name,
+            channels: device.channels.map((d) => ({
+              value: d.value,
+              type: d.type,
+            })),
+          }
+        );
+      });
+  } else {
     aedesService.publishToTopic(helperFunctions.getDeviceTopic(client.device), {
       message: client.device.name,
       channels: client.device.channels.map((d) => ({
