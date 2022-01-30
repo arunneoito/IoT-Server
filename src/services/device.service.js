@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Sections = require("../models/section.model");
 const Device = require("../models/device.model");
+const DeviceType = require("../models/deviceTypes.model");
 const { validateValue } = require("../../utils/helpers");
 
 function createSecret() {
@@ -54,6 +55,25 @@ async function findById(deviceId) {
 
 async function updateSubscription(id, clientId, connected) {
   await Device.updateOne({ _id: id }, { client_id: clientId, connected });
+}
+
+async function getDeviceChannels({ user, device, name }) {
+  const deviceChannel = await DeviceType.findOne({ name });
+  if (!deviceChannel) {
+    throw new Error("invalid device name provided");
+  }
+  const deviceUpdated = await Device.findOneAndUpdate(
+    { _id: device.id },
+    {
+      $push: {
+        channels: {
+          $each: deviceChannel.channels,
+        },
+      },
+    },
+    { new: true }
+  );
+  return deviceUpdated;
 }
 
 async function addDeviceChannels({ user, deviceId, channels }) {
@@ -143,4 +163,5 @@ module.exports = {
   updateDevice,
   deleteChannel,
   updateChannel,
+  getDeviceChannels,
 };

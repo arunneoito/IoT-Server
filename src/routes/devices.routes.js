@@ -15,7 +15,16 @@ const router = express.Router();
 
 router.post("/create", authorize(), deviceSchema, createDevice);
 router.post("/getUserDevices", authorize(), getUserDevices);
-router.post("/createChannel", deviceApiAuth(), channelSchema, addDeviceChannel);
+// router.post("/createChannel", deviceApiAuth(), channelSchema, addDeviceChannel);
+
+// get channels with Device ID and Device Secret, create and return channels for new devices
+router.get(
+  "/getChannels",
+  deviceApiAuth(),
+  getChannelSchema,
+  getDeviceChannels
+);
+
 router.post("/sendToDevice", authorize(), sendMsgSchema, sendMessageToDevice);
 router.post(
   "/updateChannel",
@@ -55,6 +64,20 @@ function getUserDevices(req, res, next) {
     });
 }
 
+function getDeviceChannels(req, res, next) {
+  deviceService
+    .getDeviceChannels({
+      user: req.user,
+      device: req.device,
+      name: req.headers.name,
+    })
+    .then((d) => {
+      res.status(200).send({ message: "Success", data: d, error: false });
+    })
+    .catch(next);
+}
+
+// eslint-disable-next-line no-unused-vars
 function addDeviceChannel(req, res, next) {
   deviceService
     .addDeviceChannels({ user: req.user, ...req.body })
@@ -172,21 +195,28 @@ function updateChannelSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-function channelSchema(req, res, next) {
-  const channel = Joi.object().keys({
-    value: Joi.any().required(),
-    name: Joi.string().required(),
-    port: Joi.number().required(),
-    inout: Joi.boolean().required(),
-    value_type: Joi.string().valid("string", "boolean", "number"),
-  });
-
+function getChannelSchema(req, res, next) {
   const schema = Joi.object({
-    channels: Joi.array().items(channel).required(),
-    deviceId: Joi.string().required(),
+    name: Joi.string().required(),
   });
-
   validateRequest(req, next, schema);
 }
+
+// function channelSchema(req, res, next) {
+//   const channel = Joi.object().keys({
+//     value: Joi.any().required(),
+//     name: Joi.string().required(),
+//     port: Joi.number().required(),
+//     inout: Joi.boolean().required(),
+//     value_type: Joi.string().valid("string", "boolean", "number"),
+//   });
+
+//   const schema = Joi.object({
+//     channels: Joi.array().items(channel).required(),
+//     deviceId: Joi.string().required(),
+//   });
+
+//   validateRequest(req, next, schema);
+// }
 
 module.exports = router;

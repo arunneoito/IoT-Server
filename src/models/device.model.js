@@ -1,15 +1,8 @@
 const mongoose = require("mongoose");
 const { deviceUpdated } = require("../events/device.events");
+const channelSchema = require("./channel.model");
 
 const { Schema } = mongoose;
-
-const channelSchema = new Schema({
-  value_type: { type: String, required: true },
-  value: { type: String, required: false },
-  name: { type: String, required: true },
-  port: { type: Number, required: true },
-  inout: { type: Boolean, required: true },
-});
 
 const schema = new Schema({
   account_id: { type: String, required: true },

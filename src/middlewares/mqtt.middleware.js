@@ -51,13 +51,14 @@ exports.mqttSubAuth = (client, sub, callback) => {
 exports.deviceApiAuth = () => [
   async (req, res, next) => {
     const device = await deviceService.findByIdAndSecret(
-      req.body.deviceId,
-      req.body.deviceSecret
+      req.header("deviceId"),
+      req.header("deviceSecret")
     );
     if (device) {
       const user = await Account.findById(device.account_id);
       if (user) {
         req.user = { account: user };
+        req.device = device;
       }
       next();
     } else {

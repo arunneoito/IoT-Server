@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const aedes = require("aedes")();
 const server = require("net").createServer(aedes.handle);
 const express = require("express");
@@ -51,10 +52,10 @@ const connectMongo = () => {
   mongoose
     .connect(process.env.MONGODB_URI || connectionString, connectionOptions)
     .then(() => {
-      console.log("database connected");
+      console.log("Database connected");
     })
     .catch((e) => {
-      console.log("Database connection failed");
+      console.log("Database connection failed ", e);
     });
 };
 
