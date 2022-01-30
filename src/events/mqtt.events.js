@@ -43,8 +43,7 @@ exports.subscribe = (subscriptions, client) => {
         aedesService.publishToTopic(
           helperFunctions.getDeviceTopic(client.device),
           {
-            message: client.device.name,
-            channels: device.channels.map((d) => ({
+            data: device.channels.map((d) => ({
               port: d.port,
               value: d.value,
               valueType: d.value_type,
@@ -55,8 +54,7 @@ exports.subscribe = (subscriptions, client) => {
       });
   } else {
     aedesService.publishToTopic(helperFunctions.getDeviceTopic(client.device), {
-      message: client.device.name,
-      channels: client.device.channels.map((d) => ({
+      data: client.device.channels.map((d) => ({
         port: d.port,
         value: d.value,
         valueType: d.value_type,

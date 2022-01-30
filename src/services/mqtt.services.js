@@ -17,11 +17,11 @@ exports.publishToTopic = (topic, data) => {
       responseTopic: "topic",
       correlationData: Buffer.from([1, 2, 3, 4]),
       userProperties: {
-        test: "test"
+        test: "test",
       },
       // eslint-disable-next-line max-len
       subscriptionIdentifier: 120, // can be an Array in message from broker, if message included in few another subscriptions
-      contentType: "test"
-    }
+      contentType: "test",
+    },
   });
 };
