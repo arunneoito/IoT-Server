@@ -20,7 +20,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.3",
     "mqtt": "^4.2.8",
-    "nodemailer": "^6.6.3"
+    "nodemailer": "^6.6.3",
+    "passport-oauth2": "^1.6.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

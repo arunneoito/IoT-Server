@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 const aedesService = require("../services/mqtt.services");
 const helpers = require("../../utils/helpers");
-
+const LogService = require("../services/log.service");
 exports.deviceUpdated = (device) => {
   if (device) {
     const data = device.channels.map((d) => ({
@@ -26,5 +26,6 @@ exports.deviceUpdated = (device) => {
       `${device.account_id}`,
       { data: device }
     );
+    LogService.createLog({});
   }
 };

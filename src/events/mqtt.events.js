@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const deviceService = require("../services/device.service");
 const aedesService = require("../services/mqtt.services");
 const helperFunctions = require("../../utils/helpers");
