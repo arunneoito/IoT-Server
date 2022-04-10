@@ -21,6 +21,8 @@
     "mongoose": "^5.13.3",
     "mqtt": "^4.2.8",
     "nodemailer": "^6.6.3",
+    "passport": "^0.5.2",
+    "passport-oauth": "^1.0.0",
     "passport-oauth2": "^1.6.1"
   },
   "devDependencies": {
