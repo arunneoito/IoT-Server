@@ -81,6 +81,9 @@ async function linkGoogle(req, res, next) {
 
   let token;
 
+  console.log(req.body);
+  console.log(req.query);
+
   if (grantType === "authorization_code") {
     if (validateRequest(req.body)) {
       res.status(400).send({ error: "invalid_grant" });
