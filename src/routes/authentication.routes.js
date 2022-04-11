@@ -15,9 +15,12 @@ const validateRequest = require("../middlewares/validation.middleware");
 const authorize = require("../middlewares/auth.middleware");
 const Role = require("../../utils/roles");
 const accountService = require("../services/authentication.service");
-
-// TODO change to env file
-const GOOGLE_CLIENT_ID = "neo-switch-v2";
+const {
+  google_client_id,
+  google_client_secret,
+  google_redirect_url,
+} = require("../../config.json");
+const authenticationService = require("../services/authentication.service");
 
 // google login
 
@@ -30,9 +33,7 @@ router.get("/login", (req, res) => {
     }
   );
 });
-
 router.all("/token", linkGoogle);
-
 // routes
 router.get("/getUser", authorize(), getUser);
 router.get("/:id", authorize(), getById);
@@ -62,10 +63,18 @@ function authenticateSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-function linkGoogle(req, res, next) {
+async function linkGoogle(req, res, next) {
   const grantType = req.query.grant_type
     ? req.query.grant_type
     : req.body.grant_type;
+
+  const validateRequest = ({ redirect_uri, client_id, client_secret }) => {
+    return (
+      client_id !== google_client_id ||
+      client_secret !== google_client_secret ||
+      redirect_uri !== google_redirect_url
+    );
+  };
 
   const secondsInDay = 86400; // 60 * 60 * 24
   const HTTP_STATUS_OK = 200;
@@ -73,13 +82,16 @@ function linkGoogle(req, res, next) {
   let token;
 
   if (grantType === "authorization_code") {
-    const { grant_type, code, redirect_uri, client_id, client_secret } =
-      req.body;
-
-    if (client_id !== GOOGLE_CLIENT_ID) {
+    if (validateRequest(req.body)) {
       res.status(400).send({ error: "invalid_grant" });
       return;
     }
+
+    const { grant_type, code, redirect_uri, client_id, client_secret } =
+      req.body;
+
+    const user = await authenticationService.getUserByJwt(code);
+    console.log(user);
 
     token = {
       token_type: "bearer",
@@ -88,6 +100,10 @@ function linkGoogle(req, res, next) {
       expires_in: secondsInDay,
     };
   } else if (grantType === "refresh_token") {
+    if (validateRequest(req.query)) {
+      res.status(400).send({ error: "invalid_grant" });
+      return;
+    }
     token = {
       token_type: "bearer",
       access_token: "123access",

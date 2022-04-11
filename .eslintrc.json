@@ -4,13 +4,13 @@
     "commonjs": true,
     "es2021": true
   },
-  "extends": ["airbnb-base"],
+  "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 12
   },
   "rules": {
     "comma-dangle": ["off", "never"],
-    "object-curly-newline":["off"],
+    "object-curly-newline": ["off"],
     "quotes": ["off", "double"],
     "operator-linebreak": ["off", "never"]
   }
