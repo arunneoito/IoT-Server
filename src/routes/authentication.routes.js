@@ -59,6 +59,8 @@ function authenticateSchema(req, res, next) {
 }
 
 function linkGoogle(req, res, next) {
+  console.log(req.body);
+  console.log(req.query);
   const grantType = req.query.grant_type
     ? req.query.grant_type
     : req.body.grant_type;
