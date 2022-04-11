@@ -37,7 +37,7 @@ async function authenticate({ email, password, ipAddress }) {
 }
 
 async function getUserByJwt(token) {
-  const payload = jwt.verify(token);
+  const payload = jwt.verify(token, config.secret);
   console.log(payload);
   return await Account.findById(payload.id);
 }
