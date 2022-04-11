@@ -22,7 +22,7 @@ async function authenticate({ email, password, ipAddress }) {
   }
 
   // authentication successful so generate jwt and refresh tokens
-  const jwtToken = generateJwtToken(account);
+  const jwtToken = generateJwtToken(account, "15min", "access");
   const refreshToken = generateRefreshToken(account, ipAddress);
 
   // save refresh token
@@ -55,7 +55,7 @@ async function refreshToken({ token, ipAddress }) {
   await newRefreshToken.save();
 
   // generate new jwt
-  const jwtToken = generateJwtToken(account);
+  const jwtToken = generateJwtToken(account, "15min", "access");
 
   // return basic details and tokens
   return {
@@ -235,10 +235,10 @@ function hash(password) {
   return bcrypt.hashSync(password, 10);
 }
 
-function generateJwtToken(account) {
+function generateJwtToken(account, expiresIn, type) {
   // create a jwt token containing the account id that expires in 15 minutes
-  return jwt.sign({ sub: account.id, id: account.id }, config.secret, {
-    expiresIn: "15m",
+  return jwt.sign({ sub: account.id, id: account.id, type }, config.secret, {
+    expiresIn,
   });
 }
 
@@ -353,4 +353,5 @@ module.exports = {
   update,
   delete: _delete,
   getUserByJwt,
+  generateJwtToken,
 };

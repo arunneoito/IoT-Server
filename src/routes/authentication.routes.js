@@ -90,31 +90,42 @@ async function linkGoogle(req, res, next) {
       return;
     }
 
-    const { grant_type, code, redirect_uri, client_id, client_secret } =
-      req.body;
+    const { code } = req.body;
 
     const user = await authenticationService.getUserByJwt(code);
-    console.log(user);
+
+    if (!user) {
+      res.status(400).send({ error: "invalid_request" });
+      return;
+    }
 
     token = {
-      token_type: "bearer",
-      access_token: "123access",
-      refresh_token: "123refresh",
-      expires_in: secondsInDay,
+      access_token: accountService.generateJwtToken(user, "1d", "access"),
+      refresh_token: accountService.generateJwtToken(user, null, "refresh"),
     };
   } else if (grantType === "refresh_token") {
     if (validateRequest(req.query)) {
       res.status(400).send({ error: "invalid_grant" });
       return;
     }
+
+    const { refresh_token } = req.query;
+
+    const user = await authenticationService.getUserByJwt(refresh_token);
+
+    if (!user) {
+      res.status(404).send({ error: "user not found" });
+      return;
+    }
+
     token = {
-      token_type: "bearer",
-      access_token: "123access",
-      expires_in: secondsInDay,
+      access_token: accountService.generateJwtToken(user, "1d", "access"),
     };
   }
   // functions.logger.debug('token:', token);
-  res.status(HTTP_STATUS_OK).json(token);
+  res
+    .status(HTTP_STATUS_OK)
+    .json({ ...token, expiresIn: secondsInDay, token_type: "Bearer" });
 }
 
 function authenticate(req, res, next) {
