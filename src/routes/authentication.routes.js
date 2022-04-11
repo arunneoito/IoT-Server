@@ -27,32 +27,7 @@ router.get("/login", (req, res) => {
   );
 });
 
-router.all("/token", async (req, res) => {
-  // functions.logger.debug('/faketoken', req.query);
-
-  const grantType = req.query.grant_type
-    ? req.query.grant_type
-    : req.body.grant_type;
-  const secondsInDay = 86400; // 60 * 60 * 24
-  const HTTP_STATUS_OK = 200;
-  let token;
-  if (grantType === "authorization_code") {
-    token = {
-      token_type: "bearer",
-      access_token: "123access",
-      refresh_token: "123refresh",
-      expires_in: secondsInDay,
-    };
-  } else if (grantType === "refresh_token") {
-    token = {
-      token_type: "bearer",
-      access_token: "123access",
-      expires_in: secondsInDay,
-    };
-  }
-  // functions.logger.debug('token:', token);
-  res.status(HTTP_STATUS_OK).json(token);
-});
+router.all("/token", linkGoogle);
 
 // routes
 router.get("/getUser", authorize(), getUser);
@@ -81,6 +56,34 @@ function authenticateSchema(req, res, next) {
     password: Joi.string().required(),
   });
   validateRequest(req, next, schema);
+}
+
+function linkGoogle(req, res, next) {
+  const grantType = req.query.grant_type
+    ? req.query.grant_type
+    : req.body.grant_type;
+
+  const secondsInDay = 86400; // 60 * 60 * 24
+  const HTTP_STATUS_OK = 200;
+
+  let token;
+
+  if (grantType === "authorization_code") {
+    token = {
+      token_type: "bearer",
+      access_token: "123access",
+      refresh_token: "123refresh",
+      expires_in: secondsInDay,
+    };
+  } else if (grantType === "refresh_token") {
+    token = {
+      token_type: "bearer",
+      access_token: "123access",
+      expires_in: secondsInDay,
+    };
+  }
+  // functions.logger.debug('token:', token);
+  res.status(HTTP_STATUS_OK).json(token);
 }
 
 function authenticate(req, res, next) {
