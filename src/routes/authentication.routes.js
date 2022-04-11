@@ -1,4 +1,5 @@
-﻿/* eslint-disable implicit-arrow-linebreak */
+﻿/* eslint-disable camelcase */
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable function-paren-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
@@ -14,6 +15,9 @@ const validateRequest = require("../middlewares/validation.middleware");
 const authorize = require("../middlewares/auth.middleware");
 const Role = require("../../utils/roles");
 const accountService = require("../services/authentication.service");
+
+// TODO change to env file
+const GOOGLE_CLIENT_ID = "neo-switch-v2";
 
 // google login
 
@@ -59,8 +63,6 @@ function authenticateSchema(req, res, next) {
 }
 
 function linkGoogle(req, res, next) {
-  console.log(req.body);
-  console.log(req.query);
   const grantType = req.query.grant_type
     ? req.query.grant_type
     : req.body.grant_type;
@@ -71,6 +73,14 @@ function linkGoogle(req, res, next) {
   let token;
 
   if (grantType === "authorization_code") {
+    const { grant_type, code, redirect_uri, client_id, client_secret } =
+      req.body;
+
+    if (client_id !== GOOGLE_CLIENT_ID) {
+      res.status(400).send({ error: "invalid_grant" });
+      return;
+    }
+
     token = {
       token_type: "bearer",
       access_token: "123access",
