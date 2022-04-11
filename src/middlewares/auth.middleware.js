@@ -33,7 +33,7 @@ function authorize(roles = []) {
         // eslint-disable-next-line implicit-arrow-linebreak
         !!refreshTokens.find((x) => x.token === token);
       next();
-    }
+    },
   ];
 }
 module.exports = authorize;

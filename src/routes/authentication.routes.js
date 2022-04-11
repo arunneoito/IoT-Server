@@ -29,8 +29,6 @@ router.get("/login", (req, res) => {
 
 router.all("/token", async (req, res) => {
   // functions.logger.debug('/faketoken', req.query);
-  console.log(req.query);
-  console.log(req.body);
 
   const grantType = req.query.grant_type
     ? req.query.grant_type
@@ -55,6 +53,7 @@ router.all("/token", async (req, res) => {
   // functions.logger.debug('token:', token);
   res.status(HTTP_STATUS_OK).json(token);
 });
+
 // routes
 router.get("/getUser", authorize(), getUser);
 router.get("/:id", authorize(), getById);

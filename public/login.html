@@ -172,7 +172,6 @@
             var url = new URL(redirect_uri);
             url.searchParams.append("code", d.jwtToken);
             url.searchParams.append("state", state);
-            console.log(url);
             window.location.replace(url.toString());
           })
           .catch((err) => {
