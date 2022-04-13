@@ -40,6 +40,8 @@ async function asyncForEach(array, callback) {
 }
 
 async function getUserIdOrThrow(headers) {
+  console.log(headers);
+  console.log(headers["authorization"]);
   console.log(headers["authorization"].split[1]);
   const user = await accountService.getUserByJwt(
     headers["authorization"].split[1]
