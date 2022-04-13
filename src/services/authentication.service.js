@@ -236,10 +236,14 @@ function hash(password) {
 }
 
 function generateJwtToken(account, expiresIn, type) {
+  let expire = {};
+  if (expiresIn) expire.expiresIn = expiresIn;
   // create a jwt token containing the account id that expires in 15 minutes
-  return jwt.sign({ sub: account.id, id: account.id, type }, config.secret, {
-    expiresIn,
-  });
+  return jwt.sign(
+    { sub: account.id, id: account.id, type },
+    expire,
+    config.secret
+  );
 }
 
 function generateRefreshToken(account, ipAddress) {
