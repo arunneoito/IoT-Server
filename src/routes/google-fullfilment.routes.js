@@ -49,7 +49,7 @@ async function getUserIdOrThrow(headers) {
 }
 
 app.onSync(async (body, headers) => {
-  functions.logger.debug("SyncRequest:", body);
+  console.log("SyncRequest:", body);
   const userId = await getUserIdOrThrow(headers);
   await firestore.setHomegraphEnable(userId, true);
 
@@ -61,12 +61,12 @@ app.onSync(async (body, headers) => {
       devices,
     },
   };
-  functions.logger.debug("SyncResponse:", syncResponse);
+  console.log("SyncResponse:", syncResponse);
   return syncResponse;
 });
 
 app.onQuery(async (body, headers) => {
-  functions.logger.debug("QueryRequest:", body);
+  console.log("QueryRequest:", body);
   const userId = await getUserIdOrThrow(headers);
   const deviceStates = {};
   const { devices } = body.inputs[0].payload;
@@ -78,7 +78,7 @@ app.onQuery(async (body, headers) => {
         status: "SUCCESS",
       };
     } catch (e) {
-      functions.logger.error("error getting device state:", e);
+      console.log("error getting device state:", e);
       deviceStates[device.id] = {
         status: "ERROR",
         errorCode: "deviceOffline",
@@ -91,12 +91,12 @@ app.onQuery(async (body, headers) => {
       devices: deviceStates,
     },
   };
-  functions.logger.debug("QueryResponse:", queryResponse);
+  console.log("QueryResponse:", queryResponse);
   return queryResponse;
 });
 
 app.onExecute(async (body, headers) => {
-  functions.logger.debug("ExecuteRequest:", body);
+  console.log("ExecuteRequest:", body);
   const userId = await getUserIdOrThrow(headers);
   const commands = [];
 
@@ -121,20 +121,20 @@ app.onExecute(async (body, headers) => {
             },
           },
         };
-        functions.logger.debug("RequestStateRequest:", reportStateRequest);
+        console.log("RequestStateRequest:", reportStateRequest);
         const reportStateResponse = JSON.parse(
           await app.reportState(reportStateRequest)
         );
-        functions.logger.debug("ReportStateResponse:", reportStateResponse);
+        console.log("ReportStateResponse:", reportStateResponse);
       } catch (e) {
         const errorResponse = JSON.parse(e);
-        functions.logger.error(
+        console.log(
           "error reporting device state to homegraph:",
           errorResponse
         );
       }
     } catch (e) {
-      functions.logger.error(
+      console.log(
         "error returned by execution on firestore device document",
         e
       );
@@ -185,16 +185,16 @@ app.onExecute(async (body, headers) => {
       commands,
     },
   };
-  functions.logger.debug("ExecuteResponse:", executeResponse);
+  console.log("ExecuteResponse:", executeResponse);
   return executeResponse;
 });
 
 app.onDisconnect(async (body, headers) => {
-  functions.logger.debug("DisconnectRequest:", body);
+  console.log("DisconnectRequest:", body);
   const userId = await getUserIdOrThrow(headers);
   await firestore.disconnect(userId);
   const disconnectResponse = {};
-  functions.logger.debug("DisconnectResponse:", disconnectResponse);
+  console.log("DisconnectResponse:", disconnectResponse);
   return disconnectResponse;
 });
 
