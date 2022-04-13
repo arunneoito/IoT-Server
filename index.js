@@ -11,6 +11,7 @@ const mqttEvents = require("./src/events/mqtt.events");
 const authRoutes = require("./src/routes/authentication.routes");
 const sectionRoutes = require("./src/routes/section.routes");
 const deviceRoutes = require("./src/routes/devices.routes");
+const smartHomeApp = require("./src/routes/google-fullfilment.routes");
 const errorHandler = require("./src/middlewares/error.middleware");
 
 const port = 1883;
@@ -35,6 +36,7 @@ app.use(cors());
 app.use("/auth", authRoutes);
 app.use("/device", deviceRoutes);
 app.use("/section", sectionRoutes);
+app.post("/fulfillment", smartHomeApp);
 
 app.use(errorHandler);
 
