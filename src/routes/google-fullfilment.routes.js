@@ -40,11 +40,14 @@ async function asyncForEach(array, callback) {
 }
 
 async function getUserIdOrThrow(headers) {
-  console.log(headers);
-  console.log(headers["authorization"]);
-  console.log(headers["authorization"].split[1]);
+  if (!headers["authorization"].split(" ")[1]) {
+    throw new Error(
+      `User  has not created an account, so there are no devices`
+    );
+  }
+
   const user = await accountService.getUserByJwt(
-    headers["authorization"].split[1]
+    headers["authorization"].split(" ")[1]
   );
   if (!userExists) {
     throw new Error(
