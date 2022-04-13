@@ -158,12 +158,18 @@ app.onExecute(async (body, headers) => {
   const { devices, execution } = body.inputs[0].payload.commands[0];
   await asyncForEach(devices, async (device) => {
     try {
-      const state = await deviceService.findById(device.customData.deviceId);
-      console.log(execution);
+      const update = await deviceService.updateChannel(
+        device.customData.deviceId,
+        device.id,
+        execution[0].params.on
+      );
       commands.push({
         ids: [device.id],
         status: "SUCCESS",
-        states,
+        states: {
+          on: execution[0].params.on,
+          online: true,
+        },
       });
       try {
         const reportStateRequest = {
