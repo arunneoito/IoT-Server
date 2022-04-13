@@ -86,7 +86,9 @@ app.onSync(async (body, headers) => {
   console.log(user);
   await accountService.update(user.id, { homeGraphEnabled: true });
 
-  const devices = await deviceService.getUserDevices({ user });
+  const devices = await deviceService.getUserDevices({
+    user: { account: user },
+  });
   const homeGraphDevices = devices.map((d) => parseHomeGraphDevice(d));
 
   console.log(homeGraphDevices);
