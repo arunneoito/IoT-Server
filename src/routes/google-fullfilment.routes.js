@@ -50,6 +50,7 @@ async function getUserIdOrThrow(headers) {
 
 app.onSync(async (body, headers) => {
   console.log("SyncRequest:", body);
+  console.log("SyncRequest:", headers);
   const userId = await getUserIdOrThrow(headers);
   await firestore.setHomegraphEnable(userId, true);
 
