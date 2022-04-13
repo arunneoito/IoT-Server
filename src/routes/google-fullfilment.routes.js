@@ -62,7 +62,7 @@ async function getUserIdOrThrow(headers) {
 function parseHomeGraphDevice(devices) {
   const hgDevices = [];
   devices.forEach((element) => {
-    element.channel.forEach((channel) => {
+    element.channels.forEach((channel) => {
       hgDevices.push({
         id: channel.id,
         type: "action.devices.types.OUTLET",
