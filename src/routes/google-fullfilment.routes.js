@@ -21,7 +21,6 @@ const path = require("path");
 const { smarthome } = require("actions-on-google");
 const accountService = require("../services/authentication.service");
 const deviceService = require("../services/device.service");
-const { parse } = require("path");
 
 let jwt;
 try {
@@ -96,9 +95,7 @@ function parseHomeGraphDevice(devices) {
 
 app.onSync(async (body, headers) => {
   const user = await getUserIdOrThrow(headers);
-  console.log(user);
   await accountService.update(user.id, { homeGraphEnabled: true });
-
   const userDevices = await deviceService.getUserDevices({
     user: { account: user },
   });
@@ -173,7 +170,7 @@ app.onExecute(async (body, headers) => {
       });
       try {
         const reportStateRequest = {
-          agentUserId: userId,
+          agentUserId: user.id,
           requestId: Math.random().toString(),
           payload: {
             devices: {
@@ -253,8 +250,8 @@ app.onExecute(async (body, headers) => {
 
 app.onDisconnect(async (body, headers) => {
   console.log("DisconnectRequest:", body);
-  const userId = await getUserIdOrThrow(headers);
-  await firestore.disconnect(userId);
+  const user = await getUserIdOrThrow(headers);
+  await accountService.update(user.id, { homeGraphEnabled: false });
   const disconnectResponse = {};
   console.log("DisconnectResponse:", disconnectResponse);
   return disconnectResponse;
