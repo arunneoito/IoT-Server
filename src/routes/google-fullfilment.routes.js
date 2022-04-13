@@ -152,13 +152,14 @@ app.onQuery(async (body, headers) => {
 
 app.onExecute(async (body, headers) => {
   console.log("ExecuteRequest:", body);
-  const userId = await getUserIdOrThrow(headers);
+  const user = await getUserIdOrThrow(headers);
   const commands = [];
 
   const { devices, execution } = body.inputs[0].payload.commands[0];
   await asyncForEach(devices, async (device) => {
     try {
-      const states = await firestore.execute(userId, device.id, execution[0]);
+      const state = await deviceService.findById(device.customData.deviceId);
+      console.log(execution);
       commands.push({
         ids: [device.id],
         status: "SUCCESS",
