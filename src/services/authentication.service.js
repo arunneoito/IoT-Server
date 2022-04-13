@@ -238,6 +238,7 @@ function hash(password) {
 function generateJwtToken(account, expiresIn, type) {
   let expire = {};
   if (expiresIn) expire.expiresIn = expiresIn;
+  console.log(expire);
   // create a jwt token containing the account id that expires in 15 minutes
   return jwt.sign(
     { sub: account.id, id: account.id, type },
