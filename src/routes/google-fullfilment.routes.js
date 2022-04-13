@@ -40,8 +40,9 @@ async function asyncForEach(array, callback) {
 }
 
 async function getUserIdOrThrow(headers) {
+  console.log(headers["authorization"].split[1]);
   const user = await accountService.getUserByJwt(
-    headers["authorization"].split[0]
+    headers["authorization"].split[1]
   );
   if (!userExists) {
     throw new Error(
