@@ -100,7 +100,7 @@ async function linkGoogle(req, res, next) {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "1d", "access"),
+      access_token: accountService.generateJwtToken(user, "24h", "access"),
       refresh_token: accountService.generateJwtToken(user, null, "refresh"),
     };
   } else if (grantType === "refresh_token") {
@@ -119,7 +119,7 @@ async function linkGoogle(req, res, next) {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "1d", "access"),
+      access_token: accountService.generateJwtToken(user, "24h", "access"),
     };
   }
   // functions.logger.debug('token:', token);
