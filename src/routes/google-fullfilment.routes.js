@@ -70,10 +70,10 @@ function parseHomeGraphDevice(devices) {
         name: {
           defaultNames: ["neo-switch-1"],
           name: channel.name,
-          nicknames: ["wall plug"],
+          nicknames: [channel.name],
         },
         willReportState: false,
-        roomHint: element.section_id,
+        roomHint: "Main Room",
         deviceInfo: {
           manufacturer: "Neoito",
           model: "neo-switch-p4",
