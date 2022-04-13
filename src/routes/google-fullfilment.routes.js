@@ -94,8 +94,6 @@ app.onSync(async (body, headers) => {
     user: { account: user },
   });
   const devices = parseHomeGraphDevice(userDevices);
-
-  console.log(homeGraphDevices);
   const syncResponse = {
     requestId: body.requestId,
     payload: {
