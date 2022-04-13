@@ -20,6 +20,8 @@ const path = require("path");
 
 const { smarthome } = require("actions-on-google");
 const accountService = require("../services/authentication.service");
+const deviceService = require("../services/device.service");
+const { parse } = require("path");
 
 let jwt;
 try {
@@ -49,7 +51,7 @@ async function getUserIdOrThrow(headers) {
   const user = await accountService.getUserByJwt(
     headers["authorization"].split(" ")[1]
   );
-  if (!userExists) {
+  if (!user) {
     throw new Error(
       `User  has not created an account, so there are no devices`
     );
@@ -57,12 +59,37 @@ async function getUserIdOrThrow(headers) {
   return user;
 }
 
+function parseHomeGraphDevice(device) {
+  return device.channels.map((channel) => {
+    return {
+      id: channel.id,
+      type: "action.devices.types.OUTLET",
+      traits: ["action.devices.traits.OnOff"],
+      name: {
+        defaultNames: "neoswitch socket",
+        name: channel.name,
+      },
+      deviceInfo: {
+        manufacturer: "Neoito",
+        model: "neo-sw-p4",
+        hwVersion: "1.0",
+        swVersion: "1.0",
+      },
+      willReportState: true,
+      customData: {},
+    };
+  });
+}
+
 app.onSync(async (body, headers) => {
   const user = await getUserIdOrThrow(headers);
   console.log(user);
-  await firestore.setHomegraphEnable(userId, true);
+  await accountService.update(user.id, { homeGraphEnabled: true });
 
-  const devices = await firestore.getDevices(userId);
+  const devices = await deviceService.getUserDevices({ user });
+  const homeGraphDevices = devices.map((d) => parseHomeGraphDevice(d));
+
+  console.log(homeGraphDevices);
   const syncResponse = {
     requestId: body.requestId,
     payload: {

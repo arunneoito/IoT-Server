@@ -8,19 +8,20 @@ const schema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   role: { type: String, required: true },
+  homeGraphEnabled: { type: Boolean, required: true, default: false },
   verificationToken: String,
   verified: Date,
   resetToken: {
     token: String,
-    expires: Date
+    expires: Date,
   },
   keys: {
     secretKey: { type: String },
-    createdAt: Date
+    createdAt: Date,
   },
   passwordReset: Date,
   created: { type: Date, default: Date.now },
-  updated: Date
+  updated: Date,
 });
 
 schema.virtual("isVerified").get(function () {
@@ -34,7 +35,7 @@ schema.set("toJSON", {
     // remove these props when object is serialized
     delete ret._id;
     delete ret.passwordHash;
-  }
+  },
 });
 
 module.exports = mongoose.model("Account", schema);
