@@ -122,9 +122,14 @@ app.onQuery(async (body, headers) => {
   console.log(devices);
   await asyncForEach(devices, async (device) => {
     try {
-      const states = await firestore.getState(userId, device.id);
+      const state = await deviceService.findById(device.customData.deviceId);
+      if (!state) {
+        throw new Error("Invalid device id !");
+      }
+      const channel = state.channels.find((chn) => chn.id === device.id);
       deviceStates[device.id] = {
-        ...states,
+        on: channel.value == "true",
+        online: state.connected,
         status: "SUCCESS",
       };
     } catch (e) {
