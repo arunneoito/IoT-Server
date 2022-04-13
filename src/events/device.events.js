@@ -26,6 +26,6 @@ exports.deviceUpdated = (device) => {
       `${device.account_id}`,
       { data: device }
     );
-    LogService.createLog({});
+    // LogService.createLog({});
   }
 };
