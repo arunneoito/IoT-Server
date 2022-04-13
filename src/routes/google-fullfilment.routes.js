@@ -90,17 +90,17 @@ app.onSync(async (body, headers) => {
   console.log(user);
   await accountService.update(user.id, { homeGraphEnabled: true });
 
-  const devices = await deviceService.getUserDevices({
+  const userDevices = await deviceService.getUserDevices({
     user: { account: user },
   });
-  const homeGraphDevices = parseHomeGraphDevice(devices);
+  const devices = parseHomeGraphDevice(userDevices);
 
   console.log(homeGraphDevices);
   const syncResponse = {
     requestId: body.requestId,
     payload: {
       agentUserId: user.id,
-      homeGraphDevices,
+      devices,
     },
   };
   console.log("SyncResponse:", syncResponse);
