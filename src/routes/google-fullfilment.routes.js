@@ -100,7 +100,7 @@ app.onSync(async (body, headers) => {
     requestId: body.requestId,
     payload: {
       agentUserId: user.id,
-      devices,
+      homeGraphDevices,
     },
   };
   console.log("SyncResponse:", syncResponse);
