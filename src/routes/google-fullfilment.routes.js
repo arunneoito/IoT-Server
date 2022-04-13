@@ -119,7 +119,7 @@ app.onQuery(async (body, headers) => {
   const user = await getUserIdOrThrow(headers);
   const deviceStates = {};
   const { devices } = body.inputs[0].payload;
-  print(devices);
+  console.log(devices);
   await asyncForEach(devices, async (device) => {
     try {
       const states = await firestore.getState(userId, device.id);
