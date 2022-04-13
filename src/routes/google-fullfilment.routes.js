@@ -59,26 +59,30 @@ async function getUserIdOrThrow(headers) {
   return user;
 }
 
-function parseHomeGraphDevice(device) {
-  return device.channels.map((channel) => {
-    return {
-      id: channel.id,
-      type: "action.devices.types.OUTLET",
-      traits: ["action.devices.traits.OnOff"],
-      name: {
-        defaultNames: "neoswitch socket",
-        name: channel.name,
-      },
-      deviceInfo: {
-        manufacturer: "Neoito",
-        model: "neo-sw-p4",
-        hwVersion: "1.0",
-        swVersion: "1.0",
-      },
-      willReportState: true,
-      customData: {},
-    };
+function parseHomeGraphDevice(devices) {
+  const hgDevices = [];
+  devices.forEach((element) => {
+    element.channel.forEach((channel) => {
+      hgDevices.push({
+        id: channel.id,
+        type: "action.devices.types.OUTLET",
+        traits: ["action.devices.traits.OnOff"],
+        name: {
+          defaultNames: "neoswitch socket",
+          name: channel.name,
+        },
+        deviceInfo: {
+          manufacturer: "Neoito",
+          model: "neo-sw-p4",
+          hwVersion: "1.0",
+          swVersion: "1.0",
+        },
+        willReportState: true,
+        customData: {},
+      });
+    });
   });
+  return hgDevices;
 }
 
 app.onSync(async (body, headers) => {
@@ -89,7 +93,7 @@ app.onSync(async (body, headers) => {
   const devices = await deviceService.getUserDevices({
     user: { account: user },
   });
-  const homeGraphDevices = devices.map((d) => parseHomeGraphDevice(d));
+  const homeGraphDevices = parseHomeGraphDevice(devices);
 
   console.log(homeGraphDevices);
   const syncResponse = {
