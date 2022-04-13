@@ -22,7 +22,7 @@ async function authenticate({ email, password, ipAddress }) {
   }
 
   // authentication successful so generate jwt and refresh tokens
-  const jwtToken = generateJwtToken(account, "15m", "access");
+  const jwtToken = generateJwtToken(account, "15min", "access");
   const refreshToken = generateRefreshToken(account, ipAddress);
 
   // save refresh token
@@ -55,7 +55,7 @@ async function refreshToken({ token, ipAddress }) {
   await newRefreshToken.save();
 
   // generate new jwt
-  const jwtToken = generateJwtToken(account, "15m", "access");
+  const jwtToken = generateJwtToken(account, "15min", "access");
 
   // return basic details and tokens
   return {
@@ -242,8 +242,8 @@ function generateJwtToken(account, expiresIn, type) {
   // create a jwt token containing the account id that expires in 15 minutes
   return jwt.sign(
     { sub: account.id, id: account.id, type },
-    expire,
-    config.secret
+    config.secret,
+    expire
   );
 }
 
