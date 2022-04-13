@@ -95,7 +95,7 @@ app.onSync(async (body, headers) => {
   const syncResponse = {
     requestId: body.requestId,
     payload: {
-      agentUserId: userId,
+      agentUserId: user.id,
       devices,
     },
   };
