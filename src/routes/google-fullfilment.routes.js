@@ -19,6 +19,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { smarthome } = require("actions-on-google");
+const accountService = require("../services/authentication.service");
 
 let jwt;
 try {
@@ -39,19 +40,20 @@ async function asyncForEach(array, callback) {
 }
 
 async function getUserIdOrThrow(headers) {
-  const userExists = await firestore.userExists("asdsd");
+  const user = await accountService.getUserByJwt(
+    headers["authorization"].split[0]
+  );
   if (!userExists) {
     throw new Error(
-      `User sdsdsdsd has not created an account, so there are no devices`
+      `User  has not created an account, so there are no devices`
     );
   }
-  return "asdsad";
+  return user;
 }
 
 app.onSync(async (body, headers) => {
-  console.log("SyncRequest:", body);
-  console.log("SyncRequest:", headers);
-  const userId = await getUserIdOrThrow(headers);
+  const user = await getUserIdOrThrow(headers);
+  console.log(user);
   await firestore.setHomegraphEnable(userId, true);
 
   const devices = await firestore.getDevices(userId);
