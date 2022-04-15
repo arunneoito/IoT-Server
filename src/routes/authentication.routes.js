@@ -15,11 +15,7 @@ const validateRequest = require("../middlewares/validation.middleware");
 const authorize = require("../middlewares/auth.middleware");
 const Role = require("../../utils/roles");
 const accountService = require("../services/authentication.service");
-const {
-  google_client_id,
-  google_client_secret,
-  google_redirect_url,
-} = require("../../config.json");
+
 const authenticationService = require("../services/authentication.service");
 const authenticationController = require("../controllers/auth.controller");
 

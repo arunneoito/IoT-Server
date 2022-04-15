@@ -1,6 +1,12 @@
 const accountService = require("../services/authentication.service");
 const authenticationService = require("../services/authentication.service");
 
+const {
+  google_client_id,
+  google_client_secret,
+  google_redirect_url,
+} = require("../../config.json");
+
 const validateRequest = ({ redirect_uri, client_id, client_secret }) => {
   return (
     client_id !== google_client_id ||
