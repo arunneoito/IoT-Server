@@ -125,7 +125,7 @@ async function linkGoogle(req, res, next) {
   // functions.logger.debug('token:', token);
   res
     .status(HTTP_STATUS_OK)
-    .json({ ...token, expiresIn: secondsInDay, token_type: "Bearer" });
+    .json({ ...token, expires_in: secondsInDay, token_type: "Bearer" });
 }
 
 function authenticate(req, res, next) {
