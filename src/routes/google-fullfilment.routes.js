@@ -175,7 +175,10 @@ app.onExecute(async (body, headers) => {
           payload: {
             devices: {
               states: {
-                [device.id]: states,
+                [device.id]: {
+                  on: execution[0].params.on,
+                  online: true,
+                },
               },
             },
           },
