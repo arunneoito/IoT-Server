@@ -22,6 +22,16 @@ const { smarthome } = require("actions-on-google");
 const accountService = require("../services/authentication.service");
 const deviceService = require("../services/device.service");
 
+const { google } = require("googleapis");
+const homegraph = google.homegraph("v1");
+
+const auth = new google.auth.GoogleAuth({
+  // Scopes can be specified either as an array or as a single, space-delimited string.
+  scopes: ["https://www.googleapis.com/auth/homegraph"],
+});
+
+// Acquire an auth client, and bind it to all future calls
+
 let jwt;
 try {
   jwt = JSON.parse(
@@ -29,9 +39,7 @@ try {
   );
 } catch (e) {}
 
-const app = smarthome({
-  jwt,
-});
+const app = smarthome({});
 
 // Array could be of any type
 async function asyncForEach(array, callback) {
@@ -184,9 +192,17 @@ app.onExecute(async (body, headers) => {
           },
         };
         console.log("RequestStateRequest:", reportStateRequest);
-        const reportStateResponse = JSON.parse(
-          await app.reportState(reportStateRequest)
-        );
+        const auth = new google.auth.GoogleAuth({
+          keyFile: path.join(__dirname + "../../smart-home-key.json"),
+          scopes: ["https://www.googleapis.com/auth/compute"],
+        });
+        const authClient = await auth.getClient();
+        google.options({ auth: authClient });
+
+        const reportStateResponse =
+          await homegraph.devices.reportStateAndNotification({
+            requestBody: reportStateRequest,
+          });
         console.log("ReportStateResponse:", reportStateResponse);
       } catch (e) {
         console.log(e);

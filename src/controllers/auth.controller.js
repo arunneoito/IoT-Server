@@ -63,7 +63,7 @@ exports.googelAccountLlink = async (req, res) => {
       access_token: accountService.generateJwtToken(user, "24h", "access"),
     };
   }
-  // functions.logger.debug('token:', token);
+
   res
     .status(HTTP_STATUS_OK)
     .json({ ...token, expires_in: secondsInDay, token_type: "Bearer" });

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@googleapis/homegraph": "^3.0.1",
     "actions-on-google": "^3.0.0",
     "aedes": "^0.46.0",
     "bcryptjs": "^2.4.3",
