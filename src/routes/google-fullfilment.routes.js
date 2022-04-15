@@ -193,7 +193,7 @@ app.onExecute(async (body, headers) => {
         };
         console.log("RequestStateRequest:", reportStateRequest);
         const auth = new google.auth.GoogleAuth({
-          keyFile: path.join(__dirname + "../../smart-home-key.json"),
+          keyFile: path.join(__dirname + "../../../smart-home-key.json"),
           scopes: ["https://www.googleapis.com/auth/compute"],
         });
         const authClient = await auth.getClient();
