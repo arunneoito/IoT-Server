@@ -186,6 +186,7 @@ app.onExecute(async (body, headers) => {
         );
         console.log("ReportStateResponse:", reportStateResponse);
       } catch (e) {
+        console.log(e);
         const errorResponse = JSON.parse(e);
         console.log(
           "error reporting device state to homegraph:",
