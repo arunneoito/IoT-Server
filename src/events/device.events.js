@@ -35,7 +35,7 @@ exports.deviceUpdated = (device) => {
       },
     }));
 
-    console.log({ ...states });
+    console.log(...states);
 
     const reportState = {
       agentUserId: device.account_id,
