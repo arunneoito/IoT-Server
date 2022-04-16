@@ -28,21 +28,20 @@ exports.deviceUpdated = (device) => {
       { data: device }
     );
 
-    const states = device.channels.map((d) => ({
-      [d.id]: {
+    const states = {};
+    device.channels.forEach((d) => {
+      states[d.id] = {
         on: d.value === "true",
         online: true,
-      },
-    }));
-
-    console.log(...states);
+      };
+    });
 
     const reportState = {
       agentUserId: device.account_id,
       requestId: Math.random().toString(),
       payload: {
         devices: {
-          ...states,
+          states: states,
         },
       },
     };
