@@ -102,6 +102,7 @@ function parseHomeGraphDevice(devices) {
 }
 
 app.onSync(async (body, headers) => {
+  console.log("sync command received");
   const user = await getUserIdOrThrow(headers);
   await accountService.update(user.id, { homeGraphEnabled: true });
   const userDevices = await deviceService.getUserDevices({
@@ -120,10 +121,11 @@ app.onSync(async (body, headers) => {
 });
 
 app.onQuery(async (body, headers) => {
+  console.log("query received");
   const user = await getUserIdOrThrow(headers);
   const deviceStates = {};
   const { devices } = body.inputs[0].payload;
-  console.log(devices);
+  // console.log(devices);
   await asyncForEach(devices, async (device) => {
     try {
       const state = await deviceService.findById(device.customData.deviceId);
@@ -137,7 +139,7 @@ app.onQuery(async (body, headers) => {
         status: "SUCCESS",
       };
     } catch (e) {
-      console.log("error getting device state:", e);
+      // console.log("error getting device state:", e);
       deviceStates[device.id] = {
         status: "ERROR",
         errorCode: "deviceOffline",
@@ -150,12 +152,13 @@ app.onQuery(async (body, headers) => {
       devices: deviceStates,
     },
   };
-  console.log("QueryResponse:", queryResponse);
+  // console.log("QueryResponse:", queryResponse);
   return queryResponse;
 });
 
 app.onExecute(async (body, headers) => {
-  console.log("ExecuteRequest:", body);
+  // console.log("ExecuteRequest:", body);
+  console.log("execute received");
   const user = await getUserIdOrThrow(headers);
   const commands = [];
 
@@ -202,7 +205,7 @@ app.onExecute(async (body, headers) => {
         //   requestBody: reportStateRequest,
         // });
       } catch (e) {
-        console.log("error reporting device state to homegraph:", e);
+        // console.log("error reporting device state to homegraph:", e);
       }
     } catch (e) {
       console.log(
@@ -264,7 +267,7 @@ app.onDisconnect(async (body, headers) => {
   const user = await getUserIdOrThrow(headers);
   await accountService.update(user.id, { homeGraphEnabled: false });
   const disconnectResponse = {};
-  console.log("DisconnectResponse:", disconnectResponse);
+  // console.log("DisconnectResponse:", disconnectResponse);
   return disconnectResponse;
 });
 
