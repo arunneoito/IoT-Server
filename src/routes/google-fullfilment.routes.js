@@ -115,7 +115,7 @@ app.onSync(async (body, headers) => {
       devices,
     },
   };
-  console.log("SyncResponse:", syncResponse);
+
   return syncResponse;
 });
 
@@ -198,13 +198,10 @@ app.onExecute(async (body, headers) => {
         const authClient = await auth.getClient();
         google.options({ auth: authClient });
 
-        const reportStateResponse =
-          await homegraph.devices.reportStateAndNotification({
-            requestBody: reportStateRequest,
-          });
+        // await homegraph.devices.reportStateAndNotification({
+        //   requestBody: reportStateRequest,
+        // });
       } catch (e) {
-        console.log(e);
-
         console.log("error reporting device state to homegraph:", e);
       }
     } catch (e) {
