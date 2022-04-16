@@ -201,9 +201,9 @@ app.onExecute(async (body, headers) => {
         const authClient = await auth.getClient();
         google.options({ auth: authClient });
 
-        // await homegraph.devices.reportStateAndNotification({
-        //   requestBody: reportStateRequest,
-        // });
+        homegraph.devices.reportStateAndNotification({
+          requestBody: reportStateRequest,
+        });
       } catch (e) {
         // console.log("error reporting device state to homegraph:", e);
       }
