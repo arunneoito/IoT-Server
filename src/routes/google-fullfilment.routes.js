@@ -120,7 +120,6 @@ app.onSync(async (body, headers) => {
 });
 
 app.onQuery(async (body, headers) => {
-  console.log("QueryRequest:", body);
   const user = await getUserIdOrThrow(headers);
   const deviceStates = {};
   const { devices } = body.inputs[0].payload;
@@ -203,7 +202,6 @@ app.onExecute(async (body, headers) => {
           await homegraph.devices.reportStateAndNotification({
             requestBody: reportStateRequest,
           });
-        console.log("ReportStateResponse:", reportStateResponse);
       } catch (e) {
         console.log(e);
 
@@ -261,12 +259,11 @@ app.onExecute(async (body, headers) => {
       commands,
     },
   };
-  console.log("ExecuteResponse:", executeResponse);
+
   return executeResponse;
 });
 
 app.onDisconnect(async (body, headers) => {
-  console.log("DisconnectRequest:", body);
   const user = await getUserIdOrThrow(headers);
   await accountService.update(user.id, { homeGraphEnabled: false });
   const disconnectResponse = {};
