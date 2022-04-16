@@ -3,6 +3,7 @@
 const aedesService = require("../services/mqtt.services");
 const helpers = require("../../utils/helpers");
 const LogService = require("../services/log.service");
+const homeGraphService = require("../services/home-graph.service");
 exports.deviceUpdated = (device) => {
   if (device) {
     const data = device.channels.map((d) => ({
@@ -26,6 +27,26 @@ exports.deviceUpdated = (device) => {
       `${device.account_id}`,
       { data: device }
     );
+
+    const devices = device.channels.map((d) => ({
+      [d.id]: {
+        on: d.value === "true",
+        online: true,
+      },
+    }));
+
+    const reportState = {
+      agentUserId: device.account_id,
+      requestId: Math.random().toString(),
+      payload: {
+        devices: {
+          states: { ...devices },
+        },
+      },
+    };
+
+    homeGraphService.reportState(reportState);
+
     // LogService.createLog({});
   }
 };
