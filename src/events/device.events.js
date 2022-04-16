@@ -35,6 +35,8 @@ exports.deviceUpdated = (device) => {
       },
     }));
 
+    console.log({ ...states });
+
     const reportState = {
       agentUserId: device.account_id,
       requestId: Math.random().toString(),
