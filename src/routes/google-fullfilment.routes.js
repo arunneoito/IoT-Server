@@ -187,7 +187,7 @@ app.onExecute(async (body, headers) => {
           },
         };
         console.log("RequestStateRequest:", reportStateRequest);
-        homeGraphService.reportState(reportStateRequest);
+        // homeGraphService.reportState(reportStateRequest);
       } catch (e) {
         // console.log("error reporting device state to homegraph:", e);
       }

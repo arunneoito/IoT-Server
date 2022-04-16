@@ -28,7 +28,7 @@ exports.deviceUpdated = (device) => {
       { data: device }
     );
 
-    const devices = device.channels.map((d) => ({
+    const states = device.channels.map((d) => ({
       [d.id]: {
         on: d.value === "true",
         online: true,
@@ -40,7 +40,7 @@ exports.deviceUpdated = (device) => {
       requestId: Math.random().toString(),
       payload: {
         devices: {
-          states: { ...devices },
+          ...states,
         },
       },
     };
