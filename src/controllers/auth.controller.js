@@ -20,7 +20,7 @@ exports.googelAccountLlink = async (req, res) => {
     ? req.query.grant_type
     : req.body.grant_type;
 
-  const secondsInDay = 86400; // 60 * 60 * 24
+  const secondsInDay = 900;
   const HTTP_STATUS_OK = 200;
 
   let token;
