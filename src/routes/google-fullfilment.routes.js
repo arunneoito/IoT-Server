@@ -158,7 +158,7 @@ app.onExecute(async (body, headers) => {
   const { devices, execution } = body.inputs[0].payload.commands[0];
   await asyncForEach(devices, async (device) => {
     try {
-      const update = await deviceService.updateChannel(
+      await deviceService.updateChannel(
         device.customData.deviceId,
         device.id,
         execution[0].params.on
@@ -171,26 +171,6 @@ app.onExecute(async (body, headers) => {
           online: true,
         },
       });
-      try {
-        const reportStateRequest = {
-          agentUserId: user.id,
-          requestId: body.requestId,
-          payload: {
-            devices: {
-              states: {
-                [device.id]: {
-                  on: execution[0].params.on,
-                  online: true,
-                },
-              },
-            },
-          },
-        };
-        console.log("RequestStateRequest:", reportStateRequest);
-        // homeGraphService.reportState(reportStateRequest);
-      } catch (e) {
-        // console.log("error reporting device state to homegraph:", e);
-      }
     } catch (e) {
       console.log(
         "error returned by execution on firestore device document",
@@ -250,9 +230,7 @@ app.onExecute(async (body, headers) => {
 app.onDisconnect(async (body, headers) => {
   const user = await getUserIdOrThrow(headers);
   await accountService.update(user.id, { homeGraphEnabled: false });
-  const disconnectResponse = {};
-  // console.log("DisconnectResponse:", disconnectResponse);
-  return disconnectResponse;
+  return {};
 });
 
 module.exports = app;

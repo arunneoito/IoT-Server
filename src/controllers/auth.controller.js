@@ -24,6 +24,7 @@ exports.googelAccountLlink = async (req, res) => {
   const HTTP_STATUS_OK = 200;
 
   let token;
+  console.log(grantType);
 
   if (grantType === "authorization_code") {
     if (validateRequest(req.body)) {

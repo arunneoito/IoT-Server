@@ -46,8 +46,6 @@ exports.deviceUpdated = (device) => {
       },
     };
 
-    console.log(reportState);
-
     homeGraphService.reportState(reportState);
 
     // LogService.createLog({});
