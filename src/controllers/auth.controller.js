@@ -36,6 +36,7 @@ exports.googelAccountLlink = async (req, res) => {
     const user = await authenticationService.getUserByJwt(code);
 
     if (!user) {
+      console.log("user not found or invalid token");
       res.status(400).send({ error: "invalid_request" });
       return;
     }
@@ -55,6 +56,7 @@ exports.googelAccountLlink = async (req, res) => {
     const user = await authenticationService.getUserByJwt(refresh_token);
 
     if (!user) {
+      console.log("user not found or invalid token");
       res.status(404).send({ error: "user not found" });
       return;
     }
