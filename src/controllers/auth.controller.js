@@ -9,9 +9,7 @@ const {
 
 const validateRequest = ({ redirect_uri, client_id, client_secret }) => {
   return (
-    client_id !== google_client_id ||
-    client_secret !== google_client_secret ||
-    redirect_uri !== google_redirect_url
+    client_id !== google_client_id || client_secret !== google_client_secret
   );
 };
 
