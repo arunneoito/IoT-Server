@@ -41,7 +41,7 @@ exports.googelAccountLlink = async (req, res) => {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "1m", "access"),
+      access_token: accountService.generateJwtToken(user, "12h", "access"),
       refresh_token: accountService.generateJwtToken(user, null, "refresh"),
     };
   } else if (grantType === "refresh_token") {
@@ -63,7 +63,7 @@ exports.googelAccountLlink = async (req, res) => {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "1m", "access"),
+      access_token: accountService.generateJwtToken(user, "12h", "access"),
     };
   }
 
