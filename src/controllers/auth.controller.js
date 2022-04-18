@@ -18,7 +18,7 @@ exports.googelAccountLlink = async (req, res) => {
     ? req.query.grant_type
     : req.body.grant_type;
 
-  const secondsInDay = 900;
+  const secondsInDay = 60;
   const HTTP_STATUS_OK = 200;
 
   let token;
@@ -41,7 +41,7 @@ exports.googelAccountLlink = async (req, res) => {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "15m", "access"),
+      access_token: accountService.generateJwtToken(user, "1m", "access"),
       refresh_token: accountService.generateJwtToken(user, null, "refresh"),
     };
   } else if (grantType === "refresh_token") {
@@ -63,7 +63,7 @@ exports.googelAccountLlink = async (req, res) => {
     }
 
     token = {
-      access_token: accountService.generateJwtToken(user, "15m", "access"),
+      access_token: accountService.generateJwtToken(user, "1m", "access"),
     };
   }
 
