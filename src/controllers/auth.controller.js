@@ -47,6 +47,7 @@ exports.googelAccountLlink = async (req, res) => {
   } else if (grantType === "refresh_token") {
     if (validateRequest(req.query)) {
       console.log("Invalid grant");
+      console.log(req.query);
       res.status(400).send({ error: "invalid_grant" });
       return;
     }
