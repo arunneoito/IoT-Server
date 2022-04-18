@@ -45,14 +45,14 @@ exports.googelAccountLlink = async (req, res) => {
       refresh_token: accountService.generateJwtToken(user, null, "refresh"),
     };
   } else if (grantType === "refresh_token") {
-    if (validateRequest(req.query)) {
+    if (validateRequest(req.body)) {
       console.log("Invalid grant");
-      console.log(req.query);
+      console.log(req.body);
       res.status(400).send({ error: "invalid_grant" });
       return;
     }
 
-    const { refresh_token } = req.query;
+    const { refresh_token } = req.body;
 
     const user = await authenticationService.getUserByJwt(refresh_token);
 
